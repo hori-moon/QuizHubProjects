@@ -1,4 +1,5 @@
 from django.http import HttpResponse
- 
-def index(request):
-    return HttpResponse('Hello Django!!')
+from django.shortcuts import render
+
+def to_text(request):
+    return render(request, 'to_text.html')

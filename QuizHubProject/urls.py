@@ -16,9 +16,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from QuizHub.views import index
+from QuizHub import views
 
 urlpatterns = [
-    path('', index, name='index'),
+    path('', views.to_text, name='to_text'),
+    path('to_text/', views.to_text, name='to_text'),
     path('admin/', admin.site.urls),
 ]

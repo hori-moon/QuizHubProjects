@@ -1,0 +1,42 @@
+/* ページ全体の基本設定 */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* メインコンテンツの中央寄せ設定 */
+.main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ファイル選択用のinputは非表示にする */
+#file-input {
+    margin-top: 50px;
+    display: none;
+}
+
+/* 見た目をカスタマイズしたファイル選択ボタン */
+.custom-file-upload {
+    display: inline-block;
+    padding: 10px 20px;
+    cursor: pointer;
+    border: 1px solid black;
+    margin-bottom: 30px;
+}
+
+/* ファイル選択後に表示される結果ボックス */
+.result-box {
+    border: 1px solid black;
+    width: 400px;
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

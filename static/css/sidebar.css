@@ -1,0 +1,28 @@
+/* サイドバー全体のスタイル */
+.sidebar {
+    height: 100%;
+    width: 0; /* 最初は幅ゼロで隠れている */
+    position: fixed;
+    top: 60px; /* ヘッダーの下から配置する */
+    left: 0;
+    background-color: #333;
+    overflow-x: hidden;
+    overflow-y: auto;
+    transition: width 0.3s ease; /* スムーズな開閉アニメーション */
+    padding-top: 20px;
+    color: white;
+    white-space: nowrap;
+    z-index: 999; /* ヘッダーよりも下に設定 */
+}
+
+/* サイドバーが開いたときのスタイル */
+.sidebar.open {
+    width: 250px; /* 幅を250pxに広げる */
+}
+
+/* サイドバー内のテキスト（メニュー項目） */
+.sidebar p {
+    padding: 10px 20px;
+    font-size: 20px;
+    margin: 0;
+}
