@@ -1,0 +1,38 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}QuizHub{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/header.css' %}">
+    <link rel="stylesheet" href="{% static 'css/sidebar.css' %}">
+    {% block extra_css %}{% endblock %}
+    <script src="{% static 'js/sidebar.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+</head>
+<body>
+
+    <!-- ヘッダー -->
+    <header class="header">
+        <button class="toggle-btn" onclick="toggleSidebar()">☰</button>
+        <h1 class="logo">QuizHub</h1>
+    </header>
+
+    <!-- サイドバー -->
+    <div id="mySidebar" class="sidebar">
+        <p>画像読み込む</p>
+        <p>問題見る</p>
+        <p>ルーム作成</p>
+        <p>ルーム参加</p>
+        <p>ログアウト</p>
+    </div>
+
+    <!-- メインコンテンツ -->
+    <div class="main">
+        {% block content %}
+        <!-- 各ページ専用のコンテンツがここに入る -->
+        {% endblock %}
+    </div>
+
+</body>
+</html>

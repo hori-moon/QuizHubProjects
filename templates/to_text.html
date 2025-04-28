@@ -1,45 +1,25 @@
+{% extends 'base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="ja">
-    <head>
-        <meta charset="UTF-8">
-        <title>QuizHub</title>
-        <link rel="stylesheet" href="{% static 'css/header.css' %}">
-        <link rel="stylesheet" href="{% static 'css/sidebar.css' %}">
-        <link rel="stylesheet" href="{% static 'css/to_text.css' %}">
-        <script src="{% static 'js/sidebar.js' %}"></script>
-        <script src="{% static 'js/to_text.js' %}"></script>
-</head>
-<body>
 
-    <!-- ヘッダー -->
-    <header class="header">
-        <button class="toggle-btn" onclick="toggleSidebar()">☰</button>
-        <h1 class="logo">QuizHub</h1>
-    </header>
+{% block title %}ホーム - QuizHub{% endblock %}
 
-    <!-- サイドバー -->
-    <div id="mySidebar" class="sidebar">
-        <p>画像読み込む</p>
-        <p>問題見る</p>
-        <p>ルーム作成</p>
-        <p>ルーム参加</p>
-        <p>ログアウト</p>
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/to_text.css' %}">
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{% static 'js/to_text.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+    <form id="upload-form">
+        <label class="custom-file-upload">
+            ファイル選択
+            <input type="file" id="file-input">
+        </label>
+    </form>
+
+    <div class="result-box">
+        文字おこしの結果
     </div>
-
-    <!-- メインコンテンツ -->
-    <div class="main">
-        <form id="upload-form">
-            <label class="custom-file-upload">
-                ファイル選択
-                <input type="file" id="file-input">
-            </label>
-        </form>
-
-        <div class="result-box">
-            文字おこしの結果
-        </div>
-    </div>
-
-</body>
-</html>
+{% endblock %}
