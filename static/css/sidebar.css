@@ -20,9 +20,17 @@
     width: 250px; /* 幅を250pxに広げる */
 }
 
-/* サイドバー内のテキスト（メニュー項目） */
-.sidebar p {
-    padding: 10px 20px;
+/* サイドバーリンクのスタイル */
+.sidebar a {
+    display: block;
     font-size: 20px;
+    padding: 10px 20px;
+    color: #fff;
+    text-decoration: none;
+    background-color: #333;
     margin: 0;
+}
+
+.sidebar a:hover {
+    background-color: #575757;
 }

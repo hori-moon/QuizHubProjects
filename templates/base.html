@@ -6,9 +6,9 @@
     <title>{% block title %}QuizHub{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'css/header.css' %}">
     <link rel="stylesheet" href="{% static 'css/sidebar.css' %}">
-    {% block extra_css %}{% endblock %}
+    {% block extra_css %}{% endblock %}     <!-- 各ページ専用のCSSがここに入る -->
     <script src="{% static 'js/sidebar.js' %}"></script>
-    {% block extra_js %}{% endblock %}
+    {% block extra_js %}{% endblock %}      <!-- 各ページ専用のJSがここに入る -->
 </head>
 <body>
 
@@ -18,14 +18,15 @@
         <h1 class="logo">QuizHub</h1>
     </header>
 
-    <!-- サイドバー -->
-    <div id="mySidebar" class="sidebar">
-        <p>画像読み込む</p>
-        <p>問題見る</p>
-        <p>ルーム作成</p>
-        <p>ルーム参加</p>
-        <p>ログアウト</p>
-    </div>
+   <!-- サイドバー -->
+<div id="mySidebar" class="sidebar">
+    <a href="{% url 'to_text' %}">画像読み込む</a>
+    <a href="">問題見る</a>
+    <a href="">ルーム作成</a>
+    <a href="">ルーム参加</a>
+    <a href="">ログアウト</a>
+</div>
+
 
     <!-- メインコンテンツ -->
     <div class="main">
