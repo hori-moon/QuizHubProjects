@@ -21,5 +21,10 @@ from QuizHub import views
 urlpatterns = [
     path('', views.to_text, name='to_text'),
     path('to_text/', views.to_text, name='to_text'),
+    path('view_questions/', views.view_questions, name='view_questions'),
+    path('create_room/', views.create_room, name='create_room'),
+    path('join_room/', views.join_room, name='join_room'),
+    path('login/', views.login_view, name='login'),
+    path('logout/', views.logout_view, name='logout'),
     path('admin/', admin.site.urls),
 ]
