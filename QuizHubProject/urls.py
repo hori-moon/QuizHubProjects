@@ -26,5 +26,6 @@ urlpatterns = [
     path('join_room/', views.join_room, name='join_room'),
     path('login/', views.login_view, name='login'),
     path('logout/', views.logout_view, name='logout'),
+    path('ocr/', views.ocr_image, name='ocr_image'),
     path('admin/', admin.site.urls),
 ]

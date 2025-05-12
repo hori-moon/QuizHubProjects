@@ -40,3 +40,16 @@ body {
     align-items: center;
     justify-content: center;
 }
+
+.image-container {
+    margin-top: 20px;
+}
+
+#crop-ok {
+    margin-top: 10px;
+    padding: 6px 12px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
