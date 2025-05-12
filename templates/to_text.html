@@ -4,30 +4,42 @@
 {% block title %}画像読み込み{% endblock %}
 
 {% block extra_css %}
-    <link rel="stylesheet" href="{% static 'css/to_text.css' %}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" />
+<link rel="stylesheet" href="{% static 'css/to_text.css' %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" />
 {% endblock %}
 
 {% block extra_js %}
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
-    <script src="{% static 'js/to_text.js' %}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+<script src="{% static 'js/to_text.js' %}"></script>
 {% endblock %}
 
 {% block content %}
-    <form id="upload-form">
-        <label class="custom-file-upload">
-            ファイル選択
-            <input type="file" id="file-input">
-        </label>
-    </form>
+<form id="upload-form">
+    <label class="custom-file-upload">
+        ファイル選択
+        <input type="file" id="file-input">
+    </label>
+</form>
 
-    <div class="image-container">
-        <img id="preview-image" style="max-width: 300px; display: none;">
+<div class="image-container">
+    <img id="preview-image">
+</div>
+
+<button id="crop-ok" style="display: none;">OK</button>
+
+<!-- どこに飛ばす？ -->
+<form id="ocr-form" action="" method="post">
+    {% csrf_token %}
+    <div class="ocr-flexbox">
+        <div class="result-box">
+            <label>文字おこしの結果</label><br>
+            <textarea id="ocr-result" rows="10"></textarea>
+        </div>
+        <div class="button-right">
+            <button id="submit-button" type="button">送信</button>
+        </div>
     </div>
+</form>
 
-    <button id="crop-ok" style="display: none;">OK</button>
 
-    <div class="result-box">
-        文字おこしの結果
-    </div>
 {% endblock %}
