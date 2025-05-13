@@ -10,6 +10,7 @@
 
 {% block extra_js %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
 <script src="{% static 'js/to_text.js' %}"></script>
 {% endblock %}
 
@@ -18,7 +19,7 @@
     <form id="upload-form">
         <label class="custom-file-upload">
             ファイル選択
-            <input type="file" id="file-input">
+            <input type="file" id="file-input" accept=".jpg,.jpeg,.png,.bmp,.gif,.webp,.pdf">
         </label>
     </form>
 
@@ -29,8 +30,7 @@
 
 </div>
 <div class="main-right">
-    <!-- どこに飛ばす？ -->
-    <form id="ocr-form" action="" method="post">
+    <form id="ocr-form" action="{% url 'to_quiz' %}" method="POST">
         {% csrf_token %}
         <div class="ocr-flexbox">
             <div class="result-box">
@@ -43,7 +43,6 @@
                 <button id="submit-button" type="button">送信</button>
             </div>
         </div>
-
     </form>
 </div>
 

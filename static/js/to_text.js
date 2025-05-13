@@ -10,29 +10,75 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // ファイル選択時の処理
     fileInput.addEventListener("change", function (e) {
-        const file = e.target.files[0]; // 選択されたファイルを取得
+        const file = e.target.files[0];
         if (!file) return;
 
-        const reader = new FileReader();
+        const fileType = file.type;
 
-        reader.onload = function (event) {
-            previewImage.src = event.target.result;
-            previewImage.style.display = "block";
-            okButton.style.display = "inline-block";
+        if (fileType === "application/pdf") {
+            // PDF処理
+            const fileReader = new FileReader();
+            fileReader.onload = function () {
+                const typedarray = new Uint8Array(this.result);
 
-            if (cropper) cropper.destroy();
-            cropper = new Cropper(previewImage, {
-                viewMode: 1,
-                aspectRatio: NaN,
-                autoCropArea: 0.8,
-            });
-        };
+                pdfjsLib.getDocument(typedarray).promise.then(function (pdf) {
+                    // 1ページ目だけを対象
+                    pdf.getPage(1).then(function (page) {
+                        const scale = 1.5;
+                        const viewport = page.getViewport({ scale: scale });
 
-        reader.readAsDataURL(file);
+                        const canvas = document.createElement("canvas");
+                        const context = canvas.getContext("2d");
+                        canvas.height = viewport.height;
+                        canvas.width = viewport.width;
 
-        // upFormを見えないようにする
-        upForm.style.display = "none";
+                        const renderContext = {
+                            canvasContext: context,
+                            viewport: viewport
+                        };
+
+                        page.render(renderContext).promise.then(function () {
+                            const imageDataUrl = canvas.toDataURL("image/png");
+                            previewImage.src = imageDataUrl;
+                            previewImage.style.display = "block";
+                            okButton.style.display = "inline-block";
+
+                            if (cropper) cropper.destroy();
+                            cropper = new Cropper(previewImage, {
+                                viewMode: 1,
+                                aspectRatio: NaN,
+                                autoCropArea: 0.8,
+                            });
+
+                            upForm.style.display = "none";
+                        });
+                    });
+                });
+            };
+            fileReader.readAsArrayBuffer(file);
+        } else if (fileType.startsWith("image/")) {
+            // 画像処理
+            const reader = new FileReader();
+            reader.onload = function (event) {
+                previewImage.src = event.target.result;
+                previewImage.style.display = "block";
+                okButton.style.display = "inline-block";
+
+                if (cropper) cropper.destroy();
+                cropper = new Cropper(previewImage, {
+                    viewMode: 1,
+                    aspectRatio: NaN,
+                    autoCropArea: 0.8,
+                });
+
+                upForm.style.display = "none";
+            };
+            reader.readAsDataURL(file);
+        } else {
+            alert("対応していないファイル形式です。画像またはPDFを選択してください。");
+        }
     });
+
 
     // 「OK」ボタンがクリックされたときの処理
     okButton.addEventListener("click", function () {
