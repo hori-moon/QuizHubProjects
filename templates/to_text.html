@@ -14,32 +14,37 @@
 {% endblock %}
 
 {% block content %}
-<form id="upload-form">
-    <label class="custom-file-upload">
-        ファイル選択
-        <input type="file" id="file-input">
-    </label>
-</form>
+<div class="main-left">
+    <form id="upload-form">
+        <label class="custom-file-upload">
+            ファイル選択
+            <input type="file" id="file-input">
+        </label>
+    </form>
 
-<div class="image-container">
-    <img id="preview-image">
-</div>
-
-<button id="crop-ok" style="display: none;">OK</button>
-
-<!-- どこに飛ばす？ -->
-<form id="ocr-form" action="" method="post">
-    {% csrf_token %}
-    <div class="ocr-flexbox">
-        <div class="result-box">
-            <label>文字おこしの結果</label><br>
-            <textarea id="ocr-result" rows="10"></textarea>
-        </div>
-        <div class="button-right">
-            <button id="submit-button" type="button">送信</button>
-        </div>
+    <div class="image-container">
+        <img id="preview-image">
     </div>
-</form>
+    <button id="crop-ok">文字起こし開始</button>
 
+</div>
+<div class="main-right">
+    <!-- どこに飛ばす？ -->
+    <form id="ocr-form" action="" method="post">
+        {% csrf_token %}
+        <div class="ocr-flexbox">
+            <div class="result-box">
+                <div class="textarea-wrapper">
+                    <textarea id="ocr-result" disabled></textarea>
+                    <div class="overlay-placeholder" id="placeholder-text">文字起こしの結果</div>
+                </div>
+            </div>
+            <div class="button-right">
+                <button id="submit-button" type="button">送信</button>
+            </div>
+        </div>
+
+    </form>
+</div>
 
 {% endblock %}
