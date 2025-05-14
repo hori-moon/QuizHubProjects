@@ -1,15 +1,29 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}QuizHub{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'css/header.css' %}">
     <link rel="stylesheet" href="{% static 'css/sidebar.css' %}">
-    {% block extra_css %}{% endblock %}     <!-- 各ページ専用のCSSがここに入る -->
+    {% block extra_css %}{% endblock %} <!-- 各ページ専用のCSSがここに入る -->
     <script src="{% static 'js/sidebar.js' %}"></script>
-    {% block extra_js %}{% endblock %}      <!-- 各ページ専用のJSがここに入る -->
+    {% block extra_js %}{% endblock %} <!-- 各ページ専用のJSがここに入る -->
+
+    <style>
+        /* ページ全体の基本設定 */
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding-top: 60px;
+        }
+    </style>
 </head>
+
 <body>
 
     <!-- ヘッダー -->
@@ -19,13 +33,13 @@
     </header>
 
     <!-- サイドバー -->
-<div id="mySidebar" class="sidebar">
-    <a href="{% url 'to_text' %}">画像読み込み</a>
-    <a href="{% url 'view_questions' %}">問題閲覧</a>
-    <a href="{% url 'create_room' %}">ルーム作成</a>
-    <a href="{% url 'join_room' %}">ルーム参加</a>
-    <a href="{% url 'logout' %}">ログアウト</a>
-</div>
+    <div id="mySidebar" class="sidebar">
+        <a href="{% url 'to_text' %}">画像読み込み</a>
+        <a href="{% url 'view_questions' %}">問題閲覧</a>
+        <a href="{% url 'create_room' %}">ルーム作成</a>
+        <a href="{% url 'join_room' %}">ルーム参加</a>
+        <a href="{% url 'logout' %}">ログアウト</a>
+    </div>
 
 
     <!-- メインコンテンツ -->
@@ -36,4 +50,5 @@
     </div>
 
 </body>
+
 </html>

@@ -5,14 +5,32 @@
 
 <!-- CSS -->
 {% block extra_css %}
-    <!-- <link rel="stylesheet" href="{% static 'css/to_text.css' %}"> -->
+<link rel="stylesheet" href="{% static 'css/view_questions.css' %}">
 {% endblock %}
 
 <!-- JS -->
 {% block extra_js %}
-    <!-- <script src="{% static 'js/to_text.js' %}"></script> -->
+<!-- <script src="{% static 'js/to_text.js' %}"></script> -->
 {% endblock %}
 
 <!-- メイン -->
 {% block content %}
+
+<div class="button-group">
+    <button class="nav-button close-button">×</button>
+
+    <div class="spacer"></div>
+
+    <button class="nav-button prev-button">◁</button>
+    <button class="nav-button next-button">▷</button>
+</div>
+
+<div class="question-box">
+    「応仁の乱」は何年に始まりましたか
+</div>
+
+<div class="result-box">
+    A.1457年　　　B.1467年　　　C.1477年　　　D.1487年
+</div>
+
 {% endblock %}

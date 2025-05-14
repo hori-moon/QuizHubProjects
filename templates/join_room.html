@@ -5,14 +5,23 @@
 
 <!-- CSS -->
 {% block extra_css %}
-    <!-- <link rel="stylesheet" href="{% static 'css/to_text.css' %}"> -->
+<link rel="stylesheet" href="{% static 'css/join_room.css' %}">
 {% endblock %}
 
 <!-- JS -->
 {% block extra_js %}
-    <!-- <script src="{% static 'js/to_text.js' %}"></script> -->
+<!-- <script src="{% static 'js/to_text.js' %}"></script> -->
 {% endblock %}
 
 <!-- メイン -->
 {% block content %}
+
+<div class="center-box">
+    <h2>ルーム参加</h2>
+    <input type="text" id="room_id" name="room_id" required placeholder="ルームID">
+    <input type="password" id="room_password" name="room_password" placeholder="ルームパスワード">
+    <div class="button-wrapper">
+        <button type="submit">参加</button>
+    </div>
+</div>
 {% endblock %}
