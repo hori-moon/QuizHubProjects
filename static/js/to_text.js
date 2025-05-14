@@ -6,7 +6,16 @@ document.addEventListener("DOMContentLoaded", function () {
     const okButton = document.getElementById("crop-ok");              // トリミング確定ボタン
     const resultBox = document.querySelector(".result-box");          // OCR結果表示用ボックス
     const textarea = document.getElementById("ocr-result");           // OCR結果表示用テキストエリア
+    const loadingOverlay = document.getElementById("loading-overlay");
     let cropper; // Cropper.js インスタンス
+
+    // ロード画面の表示・非表示を制御する関数
+    function showLoading() {
+        loadingOverlay.style.display = "flex";
+    }
+    function hideLoading() {
+        loadingOverlay.style.display = "none";
+    }
 
     // ファイル選択時の処理
     fileInput.addEventListener("change", function (e) {
@@ -87,9 +96,9 @@ document.addEventListener("DOMContentLoaded", function () {
         const canvas = cropper.getCroppedCanvas();
         const croppedImage = canvas.toDataURL();
 
-        alert("文字起こし中です。しばらくお待ちください。");
         textarea.value = ""; // テキストエリアをクリア
         textarea.disabled = false; // テキストエリアを有効化
+        showLoading(); // ロード画面表示
         sendImageToServer(croppedImage);
     });
 
@@ -111,10 +120,12 @@ document.addEventListener("DOMContentLoaded", function () {
                     placeholder.style.display = "none";
                 }
                 autoResizeTextarea(textarea); // 高さを自動調整
+                hideLoading(); // ロード画面非表示
             })
             .catch((error) => {
                 console.error("エラー:", error);
                 resultBox.textContent = "エラーが発生しました";
+                hideLoading(); // ロード画面非表示
             });
     }
 
