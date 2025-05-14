@@ -5,17 +5,22 @@
 
 <!-- CSS -->
 {% block extra_css %}
-    <!-- <link rel="stylesheet" href="{% static 'css/to_text.css' %}"> -->
+    <link rel="stylesheet" href="{% static 'css/to_quiz.css' %}">
 {% endblock %}
 
 <!-- JS -->
 {% block extra_js %}
-    <!-- <script src="{% static 'js/to_text.js' %}"></script> -->
+<!-- <script src="{% static 'js/to_text.js' %}"></script> -->
 {% endblock %}
 
 <!-- メイン -->
 {% block content %}
+<div class="main-left">
 <h2>送信されたOCR結果：</h2>
-<p>{{ ocr_result|default:"結果が送信されていません。" }}</p>
+<p>{{ ocr_result|linebreaksbr|default:"結果が送信されていません。" }}</p>
+<!-- <pre>{{ ocr_result|default:"結果が送信されていません。" }}</pre> -->
+</div>
+<div class="main-right">
+</div>
 
 {% endblock %}

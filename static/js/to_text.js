@@ -97,7 +97,6 @@ document.addEventListener("DOMContentLoaded", function () {
         const croppedImage = canvas.toDataURL();
 
         textarea.value = ""; // テキストエリアをクリア
-        textarea.disabled = false; // テキストエリアを有効化
         showLoading(); // ロード画面表示
         sendImageToServer(croppedImage);
     });
