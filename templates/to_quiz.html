@@ -15,4 +15,7 @@
 
 <!-- メイン -->
 {% block content %}
+<h2>送信されたOCR結果：</h2>
+<p>{{ ocr_result|default:"結果が送信されていません。" }}</p>
+
 {% endblock %}

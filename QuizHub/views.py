@@ -19,6 +19,12 @@ def login_view(request):
 def logout_view(request):
     return render(request, 'logout.html')
 
+def to_quiz(request):
+    if request.method == 'POST':
+        ocr_result = request.POST.get('ocr_result')
+        return render(request, 'to_quiz.html', {'ocr_result': ocr_result})
+    return render(request, 'to_quiz.html')
+
 
 import base64
 import io
