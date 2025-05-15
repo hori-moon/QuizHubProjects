@@ -19,11 +19,11 @@ def login_view(request):
 def logout_view(request):
     return render(request, 'logout.html')
 
-def to_quiz(request):
+def to_set_quiz(request):
     if request.method == 'POST':
         ocr_result = request.POST.get('ocr_result')
-        return render(request, 'to_quiz.html', {'ocr_result': ocr_result})
-    return render(request, 'to_quiz.html')
+        return render(request, 'to_set_quiz.html', {'ocr_result': ocr_result})
+    return render(request, 'to_set_quiz.html')
 
 
 import base64
@@ -56,3 +56,19 @@ def run_ocr(image_path):
     image = Image.open(image_path)
     text = pytesseract.image_to_string(image, lang='jpn')  # 'jpn' は日本語OCR用
     return text
+
+
+# Supabaseのクライアントを作成
+
+from django.http import JsonResponse
+from .services.quiz_service import insert_quiz_to_supabase
+
+def insert_quiz(request):
+    if request.method == "POST":
+        question = request.POST.get("question")
+        answer = request.POST.get("answer")
+        result = insert_quiz_to_supabase(question, answer)
+        return JsonResponse({"result": result.data})
+    return JsonResponse({"error": "Only POST allowed"})
+
+
