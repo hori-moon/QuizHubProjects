@@ -15,22 +15,19 @@
 
 <!-- メイン -->
 {% block content %}
-
 <div class="button-group">
     <button class="nav-button close-button">×</button>
-
     <div class="spacer"></div>
-
     <button class="nav-button prev-button">◁</button>
     <button class="nav-button next-button">▷</button>
 </div>
 
+{% for question in questions %}
 <div class="question-box">
-    「応仁の乱」は何年に始まりましたか
+    {{ question.content }}
 </div>
-
-<div class="result-box">
-    A.1457年　　　B.1467年　　　C.1477年　　　D.1487年
-</div>
+{% empty %}
+<p>表示できる問題がありません。</p>
+{% endfor %}
 
 {% endblock %}
