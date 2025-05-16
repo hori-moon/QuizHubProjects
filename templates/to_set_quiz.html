@@ -5,33 +5,57 @@
 
 <!-- CSS -->
 {% block extra_css %}
-    <link rel="stylesheet" href="{% static 'css/to_set_quiz.css' %}">
+<link rel="stylesheet" href="{% static 'css/to_set_quiz.css' %}">
 {% endblock %}
 
 <!-- JS -->
 {% block extra_js %}
-<!-- <script src="{% static 'js/to_text.js' %}"></script> -->
+<script src="{% static 'js/to_set_quiz.js' %}"></script>
 {% endblock %}
 
 <!-- メイン -->
 {% block content %}
 <div class="main-left">
-<h2>送信されたOCR結果：</h2>
-<p>{{ ocr_result|linebreaksbr|default:"結果が送信されていません。" }}</p>
-<!-- <pre>{{ ocr_result|default:"結果が送信されていません。" }}</pre> -->
+    <p>{{ ocr_result|linebreaksbr|default:"結果が送信されていません。" }}</p>
+    <!-- <pre>{{ ocr_result|default:"結果が送信されていません。" }}</pre> -->
 </div>
 <div class="main-right">
-    <form method="POST" action="{% url 'to_set_quiz' %}">
+    <form method="POST" action="{% url 'to_set_quiz' %}" enctype="multipart/form-data">
         {% csrf_token %}
         <h2>問題作成</h2>
+
         <div class="form-group">
-            <label for="question">問題文:</label>
+            <label for="question">問題文:</label><br>
             <textarea id="question" name="question" rows="4" cols="50" required></textarea>
         </div>
+
+        <!-- ラジオボタンで選択肢形式を選ぶ -->
         <div class="form-group">
-            <label for="answer">答え:</label>
-            <input type="text" id="answer" name="answer" required>
+            <label>選択肢の形式:</label><br>
+            <input type="radio" name="choice_type" value="none" id="choice_none" checked> <label
+                for="choice_none">なし</label>
+            <input type="radio" name="choice_type" value="text" id="choice_text"> <label for="choice_text">文字</label>
+            <input type="radio" name="choice_type" value="image" id="choice_image"> <label for="choice_image">画像</label>
         </div>
+
+        <!-- 選択肢（テキスト） -->
+        <div class="form-group" id="text_choices_group" style="display: none;">
+            <label for="choices">選択肢:</label><br>
+            <textarea id="choices" name="choices" rows="4" cols="50" placeholder="選択肢をカンマ区切りで入力してください。"></textarea>
+        </div>
+
+        <!-- 選択肢（画像） -->
+        <div class="form-group" id="image_choices_group" style="display: none;">
+            <label for="image_choices">選択肢画像:</label><br>
+            <input type="file" name="image_choices" id="image_choices" multiple accept="image/*">
+            <p style="font-size: 0.9em;">※複数画像を選択可能です。</p>
+        </div>
+
+        <div class="form-group">
+            <label for="answer">答え:</label><br>
+            <textarea id="answer" name="answer" rows="4" cols="50" required></textarea>
+        </div>
+
         <button type="submit">問題を作成</button>
     </form>
 </div>
