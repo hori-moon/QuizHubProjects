@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .services.supabase_client import supabase
+from ..services.supabase_client import supabase
 
 def view_questions(request):
     # Supabaseからquestionsテーブルのデータを取得
