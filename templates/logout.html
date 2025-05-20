@@ -1,18 +1,24 @@
-{% extends 'base.html' %}
 {% load static %}
+<!DOCTYPE html>
+<html lang="ja">
 
-{% block title %}ログアウト{% endblock %}
+<head>
+    <meta charset="UTF-8">
+    <title>ログアウト - QuizHub</title>
+    <link rel="stylesheet" href="{% static 'css/header.css' %}">
+    <link rel="stylesheet" href="{% static 'css/sidebar.css' %}">
+    <link rel="stylesheet" href="{% static 'css/logout.css' %}">
+    <script src="{% static 'js/sidebar.js' %}"></script>
+</head>
 
-<!-- CSS -->
-{% block extra_css %}
-    <!-- <link rel="stylesheet" href="{% static 'css/to_text.css' %}"> -->
-{% endblock %}
+<body>
+    <div class="main">
+        <div class="logout-box">
+            <h2>ログアウトしました</h2>
 
-<!-- JS -->
-{% block extra_js %}
-    <!-- <script src="{% static 'js/to_text.js' %}"></script> -->
-{% endblock %}
+            <a href="{% url 'login' %}" class="back-login-button">ログイン画面へ</a>
+        </div>
+    </div>
+</body>
 
-<!-- メイン -->
-{% block content %}
-{% endblock %}
+</html>
