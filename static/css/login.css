@@ -1,25 +1,45 @@
-.center-box {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 70vh;
+/* .login-box の枠を消して中央寄せのみ残す */
+.login-box {
+    width: 100%;
+    margin: 100px auto;
     text-align: center;
 }
 
-.center-box input {
-    margin: 5px;
-    padding: 8px;
-    font-size: 16px;
-    width: 250px;
+/* 入力欄のデザイン */
+.login-box input[type="text"],
+.login-box input[type="password"] {
+    width: 40%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #999;
+    border-radius: 5px;
 }
 
-.button-wrapper {
-    width: 270px;
-    text-align: right;
+/* 「新規作成」ボタンを横長に */
+.login-box .create-button {
+    width: 50%;
+    padding: 12px;
+    margin-top: 20px;
+    background-color: #8d918de9;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
 }
 
-.button-wrapper button {
-    padding: 8px 16px;
-    font-size: 16px;
+/* 「ログイン」ボタンを右下に寄せる */
+.login-box .login-button {
+    float: right;
+    margin: 10px 20% 0 0;
+    /* 右寄せ＆下寄せ調整 */
+    padding: 10px 20px;
+    background-color: #727679;
+    color: white;
+    border: none;
+    border-radius: 5px;
+}
+
+/* ホバー効果 */
+.login-box button:hover {
+    opacity: 0.8;
 }
