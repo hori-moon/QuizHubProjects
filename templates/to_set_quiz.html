@@ -17,7 +17,6 @@
 {% block content %}
 <div class="main-left">
     <p>{{ ocr_result|linebreaksbr|default:"結果が送信されていません。" }}</p>
-    <!-- <pre>{{ ocr_result|default:"結果が送信されていません。" }}</pre> -->
 </div>
 <div class="main-right">
     <form method="POST" action="{% url 'to_set_quiz' %}" enctype="multipart/form-data">
@@ -40,19 +39,22 @@
 
         <!-- 選択肢（テキスト） -->
         <div class="form-group" id="text_choices_group" style="display: none;">
-            <label for="choices">選択肢:</label><br>
-            <textarea id="choices" name="choices" rows="4" cols="50" placeholder="選択肢をカンマ区切りで入力してください。"></textarea>
+            <label>選択肢の数:</label><br>
+            <input type="number" name="text_num_choices" id="text_num_choices" value="4" min="2" required>
+            <p></p>
+            <div id="dynamic_text_choices"></div>
         </div>
 
         <!-- 選択肢（画像） -->
         <div class="form-group" id="image_choices_group" style="display: none;">
-            <label for="image_choices">選択肢画像:</label><br>
-            <input type="file" name="image_choices" id="image_choices" multiple accept="image/*">
-            <p style="font-size: 0.9em;">※複数画像を選択可能です。</p>
+            <label>選択肢の数:</label><br>
+            <input type="number" name="image_num_choices" id="image_num_choices" value="4" min="2" required>
+            <p></p>
+            <div id="dynamic_image_choices"></div>
         </div>
 
         <div class="form-group">
-            <label for="answer">答え:</label><br>
+            <label for="answer">解答:</label><br>
             <textarea id="answer" name="answer" rows="4" cols="50" required></textarea>
         </div>
 
