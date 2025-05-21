@@ -19,6 +19,9 @@ def login_view(request):
 def logout_view(request):
     return render(request, 'logout.html')
 
+def create_account(request):
+    return render(request, 'create_account.html')
+
 def to_set_quiz(request):
     if request.method == 'POST':
         ocr_result = request.POST.get('ocr_result')
