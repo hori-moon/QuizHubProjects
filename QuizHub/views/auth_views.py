@@ -25,5 +25,6 @@ def create_account(request):
 def to_set_quiz(request):
     if request.method == 'POST':
         ocr_result = request.POST.get('ocr_result')
-        return render(request, 'to_set_quiz.html', {'ocr_result': ocr_result})
-    return render(request, 'to_set_quiz.html')
+        question_num = request.POST.get('question_num')
+        return render(request, 'to_set_quiz.html', {'ocr_result': ocr_result, 'question_num': question_num})
+    return render(request, 'to_text.html')

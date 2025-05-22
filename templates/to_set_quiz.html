@@ -3,63 +3,73 @@
 
 {% block title %}問題作成{% endblock %}
 
-<!-- CSS -->
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/to_set_quiz.css' %}">
 {% endblock %}
 
-<!-- JS -->
 {% block extra_js %}
-<script src="{% static 'js/to_set_quiz.js' %}"></script>
+<script src="{% static 'js/to_set_quiz.js' %}" defer></script>
 {% endblock %}
 
-<!-- メイン -->
 {% block content %}
 <div class="main-left">
     <p>{{ ocr_result|linebreaksbr|default:"結果が送信されていません。" }}</p>
 </div>
 <div class="main-right">
-    <form method="POST" action="{% url 'to_set_quiz' %}" enctype="multipart/form-data">
+    <form method="POST" action="{% url 'to_set_quiz' %}" enctype="multipart/form-data" id="quiz-form">
         {% csrf_token %}
-        <h2>問題作成</h2>
-
         <div class="form-group">
-            <label for="question">問題文:</label><br>
-            <textarea id="question" name="question" rows="4" cols="50" required></textarea>
+            <label for="question_num">問題数: {{ question_num }}問</label>
+            <button type="button" id="prev-quiz" class="slider-nav">&lt;</button>
+            <button type="button" id="next-quiz" class="slider-nav">&gt;</button>
         </div>
-
-        <!-- ラジオボタンで選択肢形式を選ぶ -->
-        <div class="form-group">
-            <label>選択肢の形式:</label><br>
-            <input type="radio" name="choice_type" value="none" id="choice_none" checked> <label
-                for="choice_none">なし</label>
-            <input type="radio" name="choice_type" value="text" id="choice_text"> <label for="choice_text">文字</label>
-            <input type="radio" name="choice_type" value="image" id="choice_image"> <label for="choice_image">画像</label>
-        </div>
-
-        <!-- 選択肢（テキスト） -->
-        <div class="form-group" id="text_choices_group" style="display: none;">
-            <label>選択肢の数:</label><br>
-            <input type="number" name="text_num_choices" id="text_num_choices" value="4" min="2" required>
-            <p></p>
-            <div id="dynamic_text_choices"></div>
-        </div>
-
-        <!-- 選択肢（画像） -->
-        <div class="form-group" id="image_choices_group" style="display: none;">
-            <label>選択肢の数:</label><br>
-            <input type="number" name="image_num_choices" id="image_num_choices" value="4" min="2" required>
-            <p></p>
-            <div id="dynamic_image_choices"></div>
-        </div>
-
-        <div class="form-group">
-            <label for="answer">解答:</label><br>
-            <textarea id="answer" name="answer" rows="4" cols="50" required></textarea>
-        </div>
-
-        <button type="submit">問題を作成</button>
+        <input type="hidden" id="question-count" value="{{ question_num|default:0 }}">
+        <div id="quiz-slider-container">
+            <div id="quiz-slider">
+                {% for i in question_range %}
+                {% if forloop.first %}
+                <div class="quiz-slide" style="display:block;">
+                    {% else %}
+                    <div class="quiz-slide" style="display:none;">
+                        {% endif %}
+                        <h3>問題 {{ i }}</h3>
+                        <div class="form-group">
+                            <label for="question_{{ i }}">問題文:</label><br>
+                            <textarea id="question_{{ i }}" name="question_{{ i }}" rows="4" cols="50"
+                                required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>選択肢の形式:</label><br>
+                            <input type="radio" name="choice_type_{{ i }}" value="none" id="choice_none_{{ i }}"
+                                checked> <label for="choice_none_{{ i }}">なし</label>
+                            <input type="radio" name="choice_type_{{ i }}" value="text" id="choice_text_{{ i }}"> <label
+                                for="choice_text_{{ i }}">文字</label>
+                            <input type="radio" name="choice_type_{{ i }}" value="image" id="choice_image_{{ i }}">
+                            <label for="choice_image_{{ i }}">画像</label>
+                        </div>
+                        <div class="form-group text_choices_group" id="text_choices_group_{{ i }}"
+                            style="display: none;">
+                            <label>選択肢の数:</label><br>
+                            <input type="number" name="text_num_choices_{{ i }}" id="text_num_choices_{{ i }}" value="4"
+                                min="2" required>
+                            <div id="dynamic_text_choices_{{ i }}" class="dynamic-choice-group"></div>
+                        </div>
+                        <div class="form-group image_choices_group" id="image_choices_group_{{ i }}"
+                            style="display: none;">
+                            <label>選択肢の数:</label><br>
+                            <input type="number" name="image_num_choices_{{ i }}" id="image_num_choices_{{ i }}"
+                                value="4" min="2" required>
+                            <div id="dynamic_image_choices_{{ i }}" class="dynamic-choice-group"></div>
+                        </div>
+                        <div class="form-group" id="answer_container_{{ i }}">
+                            <label for="answer_{{ i }}">解答:</label><br>
+                            <textarea id="answer_{{ i }}" name="answer_{{ i }}" rows="2" cols="50" required></textarea>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <button type="submit" id="submit-quiz-btn" style="display: none;">問題を作成</button>
     </form>
 </div>
-
 {% endblock %}
