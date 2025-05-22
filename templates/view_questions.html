@@ -5,14 +5,33 @@
 
 <!-- CSS -->
 {% block extra_css %}
-    <!-- <link rel="stylesheet" href="{% static 'css/to_text.css' %}"> -->
+<link rel="stylesheet" href="{% static 'css/view_questions.css' %}">
 {% endblock %}
 
 <!-- JS -->
 {% block extra_js %}
-    <!-- <script src="{% static 'js/to_text.js' %}"></script> -->
+<!-- <script src="{% static 'js/to_text.js' %}"></script> -->
 {% endblock %}
 
 <!-- メイン -->
 {% block content %}
+<div class="body">
+    <div class="top-buttons">
+        <div class="btn-square">✕</div>
+        <div class="nav-buttons">
+            <div class="btn-square">◂</div>
+            <div class="btn-square">▸</div>
+        </div>
+    </div>
+
+    <div class="box">
+        <strong>問題文：</strong><br>
+        「富士山の標高は何メートルですか？」
+    </div>
+
+    <div class="box">
+        <strong>解答欄：</strong><br>
+        例：3776メートル
+    </div>
+</div>
 {% endblock %}

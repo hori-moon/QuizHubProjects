@@ -1,0 +1,41 @@
+/* 全体のレイアウト調整 */
+.body {
+    width: 80%;
+    margin: 100px auto 40px;
+    font-family: sans-serif;
+}
+
+/* 上部の✕ボタンとナビゲーションボタン */
+.top-buttons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+/* 四角いボタンの見た目 */
+.btn-square {
+    width: 30px;
+    height: 30px;
+    border: 1px solid #000;
+    text-align: center;
+    line-height: 30px;
+    background: #fff;
+    cursor: pointer;
+}
+
+/* ◂と▸の並び用 */
+.nav-buttons {
+    display: flex;
+    gap: 5px;
+}
+
+/* 問題文と解答欄の共通スタイル */
+.box {
+    border: 1px solid #000;
+    min-height: 100px;
+    margin-top: 10px;
+    padding: 20px;
+    text-align: center;
+    background: #fff;
+}
