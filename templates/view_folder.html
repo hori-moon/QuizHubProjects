@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}ルーム参加{% endblock %}
+
+<!-- CSS -->
+{% block extra_css %}
+<!-- <link rel="stylesheet" href="{% static 'css/join_room.css' %}"> -->
+{% endblock %}
+
+<!-- JS -->
+{% block extra_js %}
+<!-- <script src="{% static 'js/to_text.js' %}"></script> -->
+{% endblock %}
+
+<!-- メイン -->
+{% block content %}
+<h2>{{ folder.folder_name }} の問題一覧</h2>
+
+<ul>
+    {% for question in questions %}
+    <li>{{ question.content }}</li>
+    {% empty %}
+    <li>このフォルダーには問題がありません。</li>
+    {% endfor %}
+</ul>
+
+<!-- memo -->
+<!-- {% for question in questions %}
+<form action="{% url 'view_question' question.question_id %}" method="get" style="display: inline;">
+    <button type="submit">{{ folder.folder_name }}</button>
+</form>
+{% empty %} -->
+
+<a href="{% url 'inside_room' %}">✕</a>
+{% endblock %}

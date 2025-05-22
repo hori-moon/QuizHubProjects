@@ -15,7 +15,16 @@
 
 <!-- メイン -->
 {% block content %}
-<h2>ルームID: {{ room_name }}</h2>
+<h2>ルーム名：{{ room_name }}</h2>
+
+<h2>フォルダー一覧</h2>
+{% for folder in folders %}
+<form action="{% url 'view_folder' folder.folder_id %}" method="get" style="display: inline;">
+    <button type="submit">{{ folder.folder_name }}</button>
+</form>
+{% empty %}
+フォルダーがありません。
+{% endfor %}
 
 <form method="post" action="{% url 'leave_room' %}">
     {% csrf_token %}
