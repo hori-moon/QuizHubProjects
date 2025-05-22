@@ -1,41 +1,52 @@
-/* 全体のレイアウト調整 */
-.body {
-    width: 80%;
-    margin: 100px auto 40px;
-    font-family: sans-serif;
-}
-
-/* 上部の✕ボタンとナビゲーションボタン */
-.top-buttons {
+.main {
+    flex: 1;
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
     align-items: center;
-    margin-bottom: 10px;
+    justify-content: center;
 }
 
-/* 四角いボタンの見た目 */
-.btn-square {
-    width: 30px;
-    height: 30px;
-    border: 1px solid #000;
-    text-align: center;
-    line-height: 30px;
-    background: #fff;
-    cursor: pointer;
-}
-
-/* ◂と▸の並び用 */
-.nav-buttons {
+.question-box {
+    border: 1px solid black;
+    width: 700px;
+    height: 250px;
     display: flex;
-    gap: 5px;
+    align-items: center;
+    justify-content: center;
+    margin: 20px;
 }
 
-/* 問題文と解答欄の共通スタイル */
-.box {
-    border: 1px solid #000;
-    min-height: 100px;
-    margin-top: 10px;
-    padding: 20px;
-    text-align: center;
-    background: #fff;
+.result-box {
+    border: 1px solid black;
+    width: 700px;
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.button-group {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 700px;
+}
+
+.nav-button {
+    width: 32px;
+    height: 32px;
+    border: 1px solid black;
+    background-color: white;
+    font-size: 16px;
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+}
+
+.prev-button {
+    margin-right: 8px;
+}
+
+.spacer {
+    flex: 1;
 }

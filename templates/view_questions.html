@@ -15,23 +15,19 @@
 
 <!-- メイン -->
 {% block content %}
-<div class="body">
-    <div class="top-buttons">
-        <div class="btn-square">✕</div>
-        <div class="nav-buttons">
-            <div class="btn-square">◂</div>
-            <div class="btn-square">▸</div>
-        </div>
-    </div>
-
-    <div class="box">
-        <strong>問題文：</strong><br>
-        「富士山の標高は何メートルですか？」
-    </div>
-
-    <div class="box">
-        <strong>解答欄：</strong><br>
-        例：3776メートル
-    </div>
+<div class="button-group">
+    <button class="nav-button close-button">×</button>
+    <div class="spacer"></div>
+    <button class="nav-button prev-button">◁</button>
+    <button class="nav-button next-button">▷</button>
 </div>
+
+{% for question in questions %}
+<div class="question-box">
+    {{ question.content }}
+</div>
+{% empty %}
+<p>表示できる問題がありません。</p>
+{% endfor %}
+
 {% endblock %}

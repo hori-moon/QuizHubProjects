@@ -1,0 +1,35 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <title>QuizHub</title>
+    <link rel="stylesheet" href="{% static 'css/header.css' %}">
+    <link rel="stylesheet" href="{% static 'css/sidebar.css' %}">
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+    <script src="{% static 'js/sidebar.js' %}"></script>
+</head>
+
+<body>
+    <div class="main">
+        <div class="login-box">
+            <h2>ログイン</h2>
+            <form method="post">
+                {% csrf_token %}
+                <br>
+                <input type="text" name="userid" placeholder="ID">
+                </br>
+                <input type="password" name="password" placeholder="password">
+                <br><br>
+                <center>
+                    <button type="submit" name="action" value="create" class="create-button">新規作成</button>
+                </center>
+                <button type="submit" name="action" value="login" class="login-button">ログイン</button>
+            </form>
+
+        </div>
+    </div>
+</body>
+
+</html>

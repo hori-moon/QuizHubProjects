@@ -1,20 +1,26 @@
-from django.http import HttpResponse
-from django.shortcuts import render
+######## Supabaseのクライアント ########
 
-def to_text(request):
-    return render(request, 'to_text.html')
+from django.http import JsonResponse
+from .services.quiz_service import insert_quiz_to_supabase
+
+def insert_quiz(request):
+    if request.method == "POST":
+        question = request.POST.get("question")
+        answer = request.POST.get("answer")
+        result = insert_quiz_to_supabase(question, answer)
+        return JsonResponse({"result": result.data})
+    return JsonResponse({"error": "Only POST allowed"})
+
+from django.shortcuts import render
+from .services.supabase_client import supabase
 
 def view_questions(request):
-    return render(request, 'view_questions.html')
+    # Supabaseからquestionsテーブルのデータを取得
+    response = supabase.table('questions').select('question_id, content').execute()
 
-def create_room(request):
-    return render(request, 'create_room.html')
+    # エラー処理も追加したほうが安全（省略可）
+    questions = response.data if response.data else []
 
-def join_room(request):
-    return render(request, 'join_room.html')
+    return render(request, 'view_questions.html', {'questions': questions})
 
-def login_view(request):
-    return render(request, 'login.html')
 
-def logout_view(request):
-    return render(request, 'logout.html')

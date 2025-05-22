@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}問題作成{% endblock %}
+
+<!-- CSS -->
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/to_set_quiz.css' %}">
+{% endblock %}
+
+<!-- JS -->
+{% block extra_js %}
+<script src="{% static 'js/to_set_quiz.js' %}"></script>
+{% endblock %}
+
+<!-- メイン -->
+{% block content %}
+<div class="main-left">
+    <p>{{ ocr_result|linebreaksbr|default:"結果が送信されていません。" }}</p>
+</div>
+<div class="main-right">
+    <form method="POST" action="{% url 'to_set_quiz' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        <h2>問題作成</h2>
+
+        <div class="form-group">
+            <label for="question">問題文:</label><br>
+            <textarea id="question" name="question" rows="4" cols="50" required></textarea>
+        </div>
+
+        <!-- ラジオボタンで選択肢形式を選ぶ -->
+        <div class="form-group">
+            <label>選択肢の形式:</label><br>
+            <input type="radio" name="choice_type" value="none" id="choice_none" checked> <label
+                for="choice_none">なし</label>
+            <input type="radio" name="choice_type" value="text" id="choice_text"> <label for="choice_text">文字</label>
+            <input type="radio" name="choice_type" value="image" id="choice_image"> <label for="choice_image">画像</label>
+        </div>
+
+        <!-- 選択肢（テキスト） -->
+        <div class="form-group" id="text_choices_group" style="display: none;">
+            <label>選択肢の数:</label><br>
+            <input type="number" name="text_num_choices" id="text_num_choices" value="4" min="2" required>
+            <p></p>
+            <div id="dynamic_text_choices"></div>
+        </div>
+
+        <!-- 選択肢（画像） -->
+        <div class="form-group" id="image_choices_group" style="display: none;">
+            <label>選択肢の数:</label><br>
+            <input type="number" name="image_num_choices" id="image_num_choices" value="4" min="2" required>
+            <p></p>
+            <div id="dynamic_image_choices"></div>
+        </div>
+
+        <div class="form-group">
+            <label for="answer">解答:</label><br>
+            <textarea id="answer" name="answer" rows="4" cols="50" required></textarea>
+        </div>
+
+        <button type="submit">問題を作成</button>
+    </form>
+</div>
+
+{% endblock %}
