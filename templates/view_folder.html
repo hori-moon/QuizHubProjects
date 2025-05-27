@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}ルーム参加{% endblock %}
+{% block title %}ルーム{% endblock %}
 
 <!-- CSS -->
 {% block extra_css %}
@@ -13,24 +13,22 @@
 <!-- <script src="{% static 'js/to_text.js' %}"></script> -->
 {% endblock %}
 
+
 <!-- メイン -->
 {% block content %}
+<a href="{% url 'inside_room' %}">✕</a>
 <h2>{{ folder.folder_name }} の問題一覧</h2>
 
 <ul>
     {% for question in questions %}
-    <li>{{ question.content }}</li>
+    <li>
+        <a href="{% url 'view_questions' %}?question_id={{ question.question_id }}">
+            {{ question.content|slice:":10" }}{% if question.content|length > 10 %}...{% endif %}
+        </a>
+    </li>
     {% empty %}
     <li>このフォルダーには問題がありません。</li>
     {% endfor %}
 </ul>
 
-<!-- memo -->
-<!-- {% for question in questions %}
-<form action="{% url 'view_question' question.question_id %}" method="get" style="display: inline;">
-    <button type="submit">{{ folder.folder_name }}</button>
-</form>
-{% empty %} -->
-
-<a href="{% url 'inside_room' %}">✕</a>
 {% endblock %}

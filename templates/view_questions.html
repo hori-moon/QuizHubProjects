@@ -10,13 +10,13 @@
 
 <!-- JS -->
 {% block extra_js %}
-<!-- <script src="{% static 'js/to_text.js' %}"></script> -->
+<!-- <script src="{% static 'js/view_questions.js' %}"></script> -->
 {% endblock %}
 
 <!-- メイン -->
 {% block content %}
 <div class="button-group">
-    <button class="nav-button close-button">×</button>
+    <a href="{% url 'view_folder' folder_id %}" class="nav-button close-button">×</a>
     <div class="spacer"></div>
     <button class="nav-button prev-button">◁</button>
     <button class="nav-button next-button">▷</button>

@@ -1,11 +1,11 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}ルーム参加{% endblock %}
+{% block title %}ルーム{% endblock %}
 
 <!-- CSS -->
 {% block extra_css %}
-<!-- <link rel="stylesheet" href="{% static 'css/join_room.css' %}"> -->
+<!-- <link rel="stylesheet" href="{% static 'css/inside_room.css' %}"> -->
 {% endblock %}
 
 <!-- JS -->
@@ -15,20 +15,21 @@
 
 <!-- メイン -->
 {% block content %}
-<h2>ルーム名：{{ room_name }}</h2>
+<div class="center-box">
+    <h2>ルーム名：{{ room_name }}</h2>
 
-<h2>フォルダー一覧</h2>
-{% for folder in folders %}
-<form action="{% url 'view_folder' folder.folder_id %}" method="get" style="display: inline;">
-    <button type="submit">{{ folder.folder_name }}</button>
-</form>
-{% empty %}
-フォルダーがありません。
-{% endfor %}
+    <h2>フォルダー一覧</h2>
+    {% for folder in folders %}
+    <form action="{% url 'view_folder' folder.folder_id %}" method="get" style="display: inline;">
+        <button type="submit" class="folder-button">{{ folder.folder_name }}</button>
+    </form>
+    {% empty %}
+    フォルダーがありません。
+    {% endfor %}
 
-<form method="post" action="{% url 'leave_room' %}">
-    {% csrf_token %}
-    <button type="submit">ルーム退出</button>
-</form>
-
+    <form method="post" action="{% url 'leave_room' %}">
+        {% csrf_token %}
+        <button type="submit">ルーム退出</button>
+    </form>
+</div>
 {% endblock %}
