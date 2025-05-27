@@ -7,7 +7,9 @@ from ..services.supabase_client import supabase
 
 @require_http_methods(["GET", "POST"])
 def to_set_quiz(request):
+    print("to_set_quiz called")
     if request.method == "POST":
+        print("POST request received in to_set_quiz")
         # 認証ユーザーならuser.idを使い、未ログインなら固定のUUIDを使う（仮のユーザーID）
         user_id = request.user.id if request.user.is_authenticated else '11111111-1111-1111-1111-111111111111'
 
@@ -25,6 +27,7 @@ def to_set_quiz(request):
 
         # 複数問題の処理を開始
         question_count = int(request.POST.get("question-count", 0))
+        print("question_count:", question_count)
 
         # 問題数分ループして一問ずつ処理
         for i in range(1, question_count + 1):
@@ -60,6 +63,8 @@ def to_set_quiz(request):
                 "correct": [answer_text],  # 正答はリストとして格納
                 "options": options         # 選択肢のリスト
             }
+
+            print("answer_data:", answer_data)
 
             # 回答データをanswersテーブルに挿入し、結果を取得
             answer_res = supabase.table("answers").insert(answer_data).execute()

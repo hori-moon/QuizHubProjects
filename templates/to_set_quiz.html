@@ -23,7 +23,7 @@
             <button type="button" id="prev-quiz" class="slider-nav">&lt;</button>
             <button type="button" id="next-quiz" class="slider-nav">&gt;</button>
         </div>
-        <input type="hidden" id="question-count" value="{{ question_num|default:0 }}">
+        <input type="hidden" id="question-count" name="question-count" value="{{ question_num }}">
         <div id="quiz-slider-container">
             <div id="quiz-slider">
                 {% for i in question_range %}

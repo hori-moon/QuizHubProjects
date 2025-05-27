@@ -2,8 +2,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const totalQuestions = parseInt(document.getElementById("question-count").value, 10);
     const submitButton = document.getElementById("submit-quiz-btn");
 
-    submitButton.style.display = "none";
-
     const loadingOverlay = document.getElementById("loading-overlay");
     function showLoading() {
         if (loadingOverlay) loadingOverlay.style.display = "flex";
@@ -22,14 +20,17 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("prev-quiz").addEventListener("click", () => {
         if (current > 0) current--;
         showSlide(current);
+        validateForm();
     });
 
     document.getElementById("next-quiz").addEventListener("click", () => {
         if (current < slides.length - 1) current++;
         showSlide(current);
+        validateForm();
     });
 
     showSlide(current);
+    validateForm();
 
     function switchAnswerInput(questionIndex, type) {
         const container = document.getElementById(`answer_container_${questionIndex}`);
@@ -45,6 +46,7 @@ document.addEventListener("DOMContentLoaded", function () {
             input.placeholder = "例: 1,3";
             input.pattern = "[0-9,]+";
             input.required = true;
+            input.addEventListener("input", validateForm);
             container.appendChild(input);
         } else {
             const textarea = document.createElement("textarea");
@@ -53,6 +55,7 @@ document.addEventListener("DOMContentLoaded", function () {
             textarea.rows = 2;
             textarea.cols = 50;
             textarea.required = true;
+            textarea.addEventListener("input", validateForm);
             container.appendChild(textarea);
         }
     }
@@ -107,7 +110,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     textarea.name = `choices_${i}`;
                     textarea.rows = 2;
                     textarea.cols = 50;
-                    textarea.required = (textGroup.style.display === "block");
+                    textarea.addEventListener("input", validateForm);
                     wrapper.appendChild(label);
                     wrapper.appendChild(textarea);
                 }
@@ -116,7 +119,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     input.type = "file";
                     input.name = `image_choices_${i}`;
                     input.accept = "image/*";
-                    input.required = (imageGroup.style.display === "block");
+                    input.addEventListener("change", validateForm);
                     wrapper.appendChild(label);
                     wrapper.appendChild(input);
                 }
@@ -145,30 +148,42 @@ document.addEventListener("DOMContentLoaded", function () {
             const questionField = document.getElementById(`question_${i}`);
             const answerField = document.getElementById(`answer_${i}`);
 
+            if (questionField) {
+                questionField.addEventListener("input", validateForm);
+            }
+
             if (!questionField || questionField.value.trim() === "") allValid = false;
             if (!answerField || answerField.value.trim() === "") allValid = false;
+
+            const choiceType = document.querySelector(`input[name="choice_type_${i}"]:checked`)?.value;
+
+            if (choiceType === "text") {
+                const choices = document.querySelectorAll(`#dynamic_text_choices_${i} textarea`);
+                const textGroup = document.getElementById(`text_choices_group_${i}`);
+                if (textGroup && textGroup.style.display !== "none") {
+                    choices.forEach(choice => {
+                        if (choice.value.trim() === "") allValid = false;
+                    });
+                }
+            } else if (choiceType === "image") {
+                const choices = document.querySelectorAll(`#dynamic_image_choices_${i} input[type="file"]`);
+                const imageGroup = document.getElementById(`image_choices_group_${i}`);
+                if (imageGroup && imageGroup.style.display !== "none") {
+                    choices.forEach(choice => {
+                        if (!choice.files || choice.files.length === 0) allValid = false;
+                    });
+                }
+            }
+            // choiceType が none のときは選択肢チェックはスキップ
         }
 
         submitButton.style.display = allValid ? "block" : "none";
     }
 
-    for (let i = 1; i <= totalQuestions; i++) {
-        const questionField = document.getElementById(`question_${i}`);
-        const answerField = document.getElementById(`answer_${i}`);
-
-        if (questionField) {
-            questionField.addEventListener("input", validateForm);
-        }
-        if (answerField) {
-            answerField.addEventListener("input", validateForm);
-        }
-    }
 
     validateForm();
 
-    // フォーム送信時の処理
     document.getElementById("quiz-form").addEventListener("submit", (e) => {
-        // 非表示スライドのrequired属性を一時的に無効化
         slides.forEach(slide => {
             if (slide.style.display === "none") {
                 slide.querySelectorAll("[required]").forEach(input => {
@@ -178,7 +193,6 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
 
-        // ローディング表示
         showLoading();
     });
 });

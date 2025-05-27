@@ -56,7 +56,7 @@ document.addEventListener("DOMContentLoaded", function () {
                             cropper = new Cropper(previewImage, {
                                 viewMode: 1,
                                 aspectRatio: NaN,
-                                autoCropArea: 0.8,
+                                autoCropArea: 1.0,
                             });
 
                             upForm.style.display = "none";
@@ -77,7 +77,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 cropper = new Cropper(previewImage, {
                     viewMode: 1,
                     aspectRatio: NaN,
-                    autoCropArea: 0.8,
+                    autoCropArea: 1.0,
                 });
 
                 upForm.style.display = "none";
