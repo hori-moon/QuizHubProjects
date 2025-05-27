@@ -5,8 +5,6 @@
 <head>
     <meta charset="UTF-8">
     <title>QuizHub</title>
-    <link rel="stylesheet" href="{% static 'css/header.css' %}">
-    <link rel="stylesheet" href="{% static 'css/sidebar.css' %}">
     <link rel="stylesheet" href="{% static 'css/login.css' %}">
     <script src="{% static 'js/sidebar.js' %}"></script>
 </head>
@@ -17,17 +15,18 @@
             <h2>ログイン</h2>
             <form method="post">
                 {% csrf_token %}
+                <input type="text" name="name" placeholder="name">
                 <br>
-                <input type="text" name="userid" placeholder="ID">
-                </br>
                 <input type="password" name="password" placeholder="password">
                 <br><br>
-                <center>
-                    <button type="submit" name="action" value="create" class="create-button">新規作成</button>
-                </center>
+
+                <!-- ログインボタン（横長） -->
                 <button type="submit" name="action" value="login" class="login-button">ログイン</button>
             </form>
 
+            <!-- 新規作成リンク -->
+            <p class="create-account-link">
+                <a href="{% url 'create_account' %}">新規作成はこちらから</a>
         </div>
     </div>
 </body>

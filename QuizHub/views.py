@@ -23,4 +23,5 @@ def view_questions(request):
 
     return render(request, 'view_questions.html', {'questions': questions})
 
-
+def to_text_view(request):
+    return render(request, 'to_text.html')

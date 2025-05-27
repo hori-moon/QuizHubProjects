@@ -10,6 +10,9 @@ def view_questions(request):
 def create_room(request):
     return render(request, 'create_room.html')
 
+def create_account(request):
+    return render(request, 'create_account.html')
+
 def join_room(request):
     return render(request, 'join_room.html')
 
@@ -18,9 +21,6 @@ def login_view(request):
 
 def logout_view(request):
     return render(request, 'logout.html')
-
-def create_account(request):
-    return render(request, 'create_account.html')
 
 def to_set_quiz(request):
     if request.method == 'POST':
