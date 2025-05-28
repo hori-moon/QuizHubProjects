@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load custom_filters %}
 
 {% block title %}問題閲覧{% endblock %}
 
@@ -26,8 +27,36 @@
 <div class="question-box">
     {{ question.content }}
 </div>
+
+<div class="answer-box">
+    {% with answers_map|dict_get:question.answer_id as answer %}
+    {% if answer %}
+    {% if answer.options and answer.options|length > 0 %}
+    <!-- 選択肢がある場合（ラジオボタン） -->
+    <form method="post">
+        {% csrf_token %}
+        {% for option in answer.options %}
+        <label>
+            <input type="radio" name="answer_{{ question.question_id }}" value="{{ option }}">
+            {{ option }}
+        </label><br>
+        {% endfor %}
+    </form>
+    {% else %}
+    <!-- 選択肢がない場合（テキスト入力） -->
+    <form method="post">
+        {% csrf_token %}
+        <input type="text" name="answer_{{ question.question_id }}" placeholder="解答を入力">
+    </form>
+    {% endif %}
+    {% else %}
+    <p>解答情報が見つかりません。</p>
+    {% endif %}
+    {% endwith %}
+</div>
 {% empty %}
 <p>表示できる問題がありません。</p>
 {% endfor %}
+
 
 {% endblock %}

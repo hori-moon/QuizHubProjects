@@ -5,7 +5,7 @@
 
 <!-- CSS -->
 {% block extra_css %}
-<!-- <link rel="stylesheet" href="{% static 'css/inside_room.css' %}"> -->
+<link rel="stylesheet" href="{% static 'css/inside_room.css' %}">
 {% endblock %}
 
 <!-- JS -->
@@ -16,20 +16,34 @@
 <!-- メイン -->
 {% block content %}
 <div class="center-box">
+
     <h2>ルーム名：{{ room_name }}</h2>
 
-    <h2>フォルダー一覧</h2>
-    {% for folder in folders %}
-    <form action="{% url 'view_folder' folder.folder_id %}" method="get" style="display: inline;">
-        <button type="submit" class="folder-button">{{ folder.folder_name }}</button>
-    </form>
-    {% empty %}
-    フォルダーがありません。
-    {% endfor %}
+    <table>
+        <tr>
+            <th>フォルダー一覧</th>
+        </tr>
+        <tr>
+            <td>
+                {% if folders %}
+                <div class="folder-style-list">
+                    {% for folder in folders %}
+                    <a href="{% url 'view_folder' folder.folder_id %}" class="folder-item">
+                        <div class="folder-name">{{ folder.folder_name }}</div>
+                    </a>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p>フォルダーがありません。</p>
+                {% endif %}
+            </td>
+        </tr>
+    </table>
 
     <form method="post" action="{% url 'leave_room' %}">
         {% csrf_token %}
-        <button type="submit">ルーム退出</button>
+        <button type="submit" class="leave-button">ルーム退出</button>
     </form>
+
 </div>
 {% endblock %}

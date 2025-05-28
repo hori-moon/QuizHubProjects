@@ -3,32 +3,41 @@
 
 {% block title %}ルーム{% endblock %}
 
-<!-- CSS -->
 {% block extra_css %}
-<!-- <link rel="stylesheet" href="{% static 'css/join_room.css' %}"> -->
+<link rel="stylesheet" href="{% static 'css/view_folder.css' %}">
+<style>
+</style>
 {% endblock %}
 
-<!-- JS -->
 {% block extra_js %}
 <!-- <script src="{% static 'js/to_text.js' %}"></script> -->
 {% endblock %}
 
-
-<!-- メイン -->
 {% block content %}
-<a href="{% url 'inside_room' %}">✕</a>
-<h2>{{ folder.folder_name }} の問題一覧</h2>
+<div class="center-box">
+    <div class="header-row">
+        <a href="{% url 'inside_room' %}" class="close-btn">✕</a>
+        <div class="folder-title">{{ folder.folder_name }}</div>
+    </div>
 
-<ul>
-    {% for question in questions %}
-    <li>
-        <a href="{% url 'view_questions' %}?question_id={{ question.question_id }}">
-            {{ question.content|slice:":10" }}{% if question.content|length > 10 %}...{% endif %}
-        </a>
-    </li>
-    {% empty %}
-    <li>このフォルダーには問題がありません。</li>
-    {% endfor %}
-</ul>
-
+    <table>
+        <tbody class="folder-style-list">
+            {% for question in questions %}
+            <tr>
+                <td>
+                    <a href="{% url 'view_questions' %}?question_id={{ question.question_id }}" class="folder-item">
+                        <div class="folder-name">
+                            {{ question.content|slice:":20" }}{% if question.content|length > 20 %}...{% endif %}
+                        </div>
+                    </a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td>このフォルダーには問題がありません。</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
 {% endblock %}
