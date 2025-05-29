@@ -17,7 +17,7 @@
 <!-- メイン -->
 {% block content %}
 <div class="button-group">
-    <a href="{% url 'view_folder' folder_id %}" class="nav-button close-button">×</a>
+    <a href="{% url 'view_folder' folder_id %}" class="nav-button close-button">✕</a>
     <div class="spacer"></div>
     <button class="nav-button prev-button">◁</button>
     <button class="nav-button next-button">▷</button>
@@ -31,24 +31,25 @@
 <div class="answer-box">
     {% with answers_map|dict_get:question.answer_id as answer %}
     {% if answer %}
-    {% if answer.options and answer.options|length > 0 %}
-    <!-- 選択肢がある場合（ラジオボタン） -->
     <form method="post">
         {% csrf_token %}
+        <input type="hidden" name="question_id" value="{{ question.question_id }}">
+
+        {% if answer.options and answer.options|length > 0 %}
+        <!-- 選択肢がある場合（ラジオボタン） -->
         {% for option in answer.options %}
         <label>
-            <input type="radio" name="answer_{{ question.question_id }}" value="{{ option }}">
+            <input type="radio" name="answer_select" value="{{ forloop.counter }}">
             {{ option }}
         </label><br>
         {% endfor %}
+        {% else %}
+        <!-- 選択肢がない場合（テキスト入力） -->
+        <input type="text" name="answer_text" placeholder="解答を入力">
+        {% endif %}
+
+        <button type="submit" name="answer_button">解答する</button>
     </form>
-    {% else %}
-    <!-- 選択肢がない場合（テキスト入力） -->
-    <form method="post">
-        {% csrf_token %}
-        <input type="text" name="answer_{{ question.question_id }}" placeholder="解答を入力">
-    </form>
-    {% endif %}
     {% else %}
     <p>解答情報が見つかりません。</p>
     {% endif %}
@@ -58,5 +59,8 @@
 <p>表示できる問題がありません。</p>
 {% endfor %}
 
+{% if result_message %}
+<p class="result-message">{{ result_message }}</p>
+{% endif %}
 
 {% endblock %}
