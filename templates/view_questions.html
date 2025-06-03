@@ -36,19 +36,29 @@
         <input type="hidden" name="question_id" value="{{ question.question_id }}">
 
         {% if answer.options and answer.options|length > 0 %}
-        <!-- 選択肢がある場合（ラジオボタン） -->
+        {% if answer.correct|length > 1 %}
+        <!-- 複数正解 → チェックボックス -->
         {% for option in answer.options %}
         <label>
-            <input type="radio" name="answer_select" value="{{ forloop.counter }}">
+            <input type="checkbox" name="answer" value="{{ forloop.counter }}">
             {{ option }}
         </label><br>
         {% endfor %}
         {% else %}
+        <!-- 単一正解 → ラジオボタン -->
+        {% for option in answer.options %}
+        <label>
+            <input type="radio" name="answer" value="{{ forloop.counter }}">
+            {{ option }}
+        </label><br>
+        {% endfor %}
+        {% endif %}
+        {% else %}
         <!-- 選択肢がない場合（テキスト入力） -->
-        <input type="text" name="answer_text" placeholder="解答を入力">
+        <input type="text" name="answer" placeholder="解答を入力">
         {% endif %}
 
-        <button type="submit" name="answer_button">解答する</button>
+        <button type="submit">解答する</button>
     </form>
     {% else %}
     <p>解答情報が見つかりません。</p>
