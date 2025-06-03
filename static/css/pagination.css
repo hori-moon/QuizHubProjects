@@ -1,0 +1,44 @@
+.pagination {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 16px;
+}
+
+.pagination a,
+.pagination span,
+.pagination form {
+    display: inline-block;
+    vertical-align: middle;
+    margin: 0 5px;
+}
+
+.pagination a,
+.pagination span {
+    padding: 6px 12px;
+    border: 1px solid #ddd;
+    text-decoration: none;
+    border-radius: 4px;
+}
+
+.pagination .disabled {
+    color: #aaa;
+    background-color: #f8f8f8;
+    border-color: #eee;
+}
+
+.page-jump-form input[type="number"] {
+    width: 80px;
+    padding: 4px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+.page-jump-form button {
+    padding: 4px 8px;
+    margin-left: 4px;
+    border-radius: 4px;
+    border: none;
+    background-color: #6b6b6b;
+    color: #ffffff;
+    cursor: pointer;
+}

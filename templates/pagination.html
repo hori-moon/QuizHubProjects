@@ -1,0 +1,40 @@
+{% load static %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/pagination.css' %}">
+<style>
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/pagination.js' %}"></script>
+{% endblock %}
+
+{% if page_obj.has_other_pages %}
+<div class="pagination">
+    <!-- 前へ -->
+    {% if page_obj.has_previous %}
+    <a href="?page={{ page_obj.previous_page_number }}" class="prev">&laquo;</a>
+    {% else %}
+    <span class="disabled">&laquo;</span>
+    {% endif %}
+
+    <!-- 現在ページ / 最大ページ -->
+    <span class="page-info">
+        {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}
+    </span>
+
+    <!-- 次へ -->
+    {% if page_obj.has_next %}
+    <a href="?page={{ page_obj.next_page_number }}" class="next">&raquo;</a>
+    {% else %}
+    <span class="disabled">&raquo;</span>
+    {% endif %}
+
+    <!-- ページジャンプ -->
+    <form id="page-jump-form" method="get" class="page-jump-form" onsubmit="return jumpToPage();">
+        <input type="number" id="page-input" name="page" min="1" max="{{ page_obj.paginator.num_pages }}"
+            placeholder="ページ番号" required>
+        <button type="submit">移動</button>
+    </form>
+</div>
+{% endif %}
