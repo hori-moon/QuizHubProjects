@@ -27,6 +27,7 @@ def join_room(request):
         # セッションに保存
         request.session['room_id'] = room['room_id']
         request.session['room_name'] = room_name
+        request.session['room_password'] = room_password
         request.session['is_editable'] = room['is_editable']
 
         return redirect('inside_room')
@@ -36,6 +37,7 @@ def join_room(request):
 def inside_room(request):
     room_id = request.session.get('room_id')
     room_name = request.session.get('room_name')
+    room_password = request.session.get('room_password')
 
     if not room_id:
         return redirect('join_room')
@@ -53,6 +55,7 @@ def inside_room(request):
 
     return render(request, 'inside_room.html', {
         'room_name': room_name,
+        'room_password': room_password,
         'folders': folders,
     })
 
