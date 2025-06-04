@@ -5,14 +5,34 @@
 
 <!-- CSS -->
 {% block extra_css %}
-    <!-- <link rel="stylesheet" href="{% static 'css/to_text.css' %}"> -->
+<link rel="stylesheet" href="{% static 'css/create_room.css' %}">
 {% endblock %}
 
-<!-- JS -->
+<!-- JavaScript -->
 {% block extra_js %}
-    <!-- <script src="{% static 'js/to_text.js' %}"></script> -->
+<script src="{% static 'js/create_room.js' %}"></script>
 {% endblock %}
 
 <!-- メイン -->
 {% block content %}
+<div class="body">
+    <div class="room-box">
+        <h2>ルーム作成</h2>
+        <form method="post">
+            {% csrf_token %}
+            <label for="room_name">ルーム名:</label>
+            <input type="text" id="room_name" name="room_name" placeholder="{{ random_room_name }}" class="room-input">
+            <br>
+            <input type="checkbox" id="use_password" name="use_password">
+            <label for="use_password">パスワードを使用する</label>
+            <br>
+            <div id="password_field">
+                <label for="password">パスワード:</label>
+                <input type="password" id="password" name="password" class="room-input">
+            </div>
+            <br>
+            <button type="submit" class="create-btn">作成</button>
+        </form>
+    </div>
+</div>
 {% endblock %}
