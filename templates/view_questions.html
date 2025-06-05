@@ -4,23 +4,30 @@
 
 {% block title %}問題閲覧{% endblock %}
 
-<!-- CSS -->
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/view_questions.css' %}">
 {% endblock %}
 
-<!-- JS -->
 {% block extra_js %}
 <!-- <script src="{% static 'js/view_questions.js' %}"></script> -->
 {% endblock %}
 
-<!-- メイン -->
 {% block content %}
 <div class="button-group">
     <a href="{% url 'view_folder' folder_id %}" class="nav-button close-button">✕</a>
     <div class="spacer"></div>
-    <button class="nav-button prev-button">◁</button>
-    <button class="nav-button next-button">▷</button>
+
+    {% if prev_question_id %}
+    <a href="?question_id={{ prev_question_id }}" class="nav-button prev-button">◁</a>
+    {% else %}
+    <button class="nav-button prev-button" disabled>◁</button>
+    {% endif %}
+
+    {% if next_question_id %}
+    <a href="?question_id={{ next_question_id }}" class="nav-button next-button">▷</a>
+    {% else %}
+    <button class="nav-button next-button" disabled>▷</button>
+    {% endif %}
 </div>
 
 {% for question in questions %}
@@ -35,6 +42,7 @@
         {% csrf_token %}
         <input type="hidden" name="question_id" value="{{ question.question_id }}">
 
+        {% if not answered_question_id or answered_question_id != question.question_id|stringformat:"s" %}
         {% if answer.options and answer.options|length > 0 %}
         {% if answer.correct|length > 1 %}
         <!-- 複数正解 → チェックボックス -->
@@ -54,11 +62,20 @@
         {% endfor %}
         {% endif %}
         {% else %}
-        <!-- 選択肢がない場合（テキスト入力） -->
+        <!-- テキスト入力 -->
         <input type="text" name="answer" placeholder="解答を入力">
         {% endif %}
-
         <button type="submit">解答する</button>
+        {% else %}
+        <!-- 解答後の表示 -->
+        <p class="correct-answer">
+            正解：
+            {% for c in answer.correct %}
+            {{ c }}{% if not forloop.last %}, {% endif %}
+            {% endfor %}
+        </p>
+        <p class="result-message">{{ result_message }}</p>
+        {% endif %}
     </form>
     {% else %}
     <p>解答情報が見つかりません。</p>
@@ -68,9 +85,4 @@
 {% empty %}
 <p>表示できる問題がありません。</p>
 {% endfor %}
-
-{% if result_message %}
-<p class="result-message">{{ result_message }}</p>
-{% endif %}
-
 {% endblock %}
