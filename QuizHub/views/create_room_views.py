@@ -16,7 +16,7 @@ def create_room(request):
             messages.error(request, f"Supabase登録中に例外が発生しました: {e}")
             return render(request, 'create_room.html')
 
-        # ルーム参加ページへリダイレクト（'join_room'はurls.pyのnameに合わせてください）
+        # ルーム参加ページへリダイレクト（情報は持たせない）
         return redirect('join_room')
 
     return render(request, 'create_room.html')
