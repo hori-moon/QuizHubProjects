@@ -18,3 +18,26 @@
     justify-content: center;
     width: 50%;
 }
+
+#quiz-slider-container {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1em;
+    }
+
+    .slider-nav {
+        font-size: 2em;
+        background: none;
+        border: none;
+        cursor: pointer;
+        width: 2em;
+        height: 2em;
+    }
+
+    #quiz-slider {
+        flex: 1;
+    }
+
+    .quiz-slide {
+        transition: all 0.3s;
+    }

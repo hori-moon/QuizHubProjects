@@ -1,106 +1,221 @@
 document.addEventListener("DOMContentLoaded", function () {
+    // 総問題数の取得
+    const totalQuestions = parseInt(document.getElementById("question-count").value, 10);
+
+    // 送信ボタンとローディング画面要素
+    const submitButton = document.getElementById("submit-quiz-btn");
     const loadingOverlay = document.getElementById("loading-overlay");
 
-    // ロード画面の表示・非表示を制御する関数
+    // ローディング表示の関数
     function showLoading() {
-        loadingOverlay.style.display = "flex";
+        if (loadingOverlay) loadingOverlay.style.display = "flex";
     }
     function hideLoading() {
-        loadingOverlay.style.display = "none";
+        if (loadingOverlay) loadingOverlay.style.display = "none";
     }
 
+    // スライド形式のUI制御
+    const slides = document.querySelectorAll(".quiz-slide");
+    let current = 0;
 
-    const questionTextarea = document.getElementById("question");
-    const answerTextarea = document.getElementById("answer");
-
-    // textarea の高さを自動調整する関数
-    function autoResizeTextarea(textarea) {
-        textarea.style.height = "auto";
-        textarea.style.height = textarea.scrollHeight + "px";
+    function showSlide(index) {
+        slides.forEach((s, i) => s.style.display = i === index ? "block" : "none");
     }
 
-    // questionTextarea の初期高さを設定
-    questionTextarea.addEventListener("input", function () {
-        autoResizeTextarea(questionTextarea);
+    // 前へボタンの挙動
+    document.getElementById("prev-quiz").addEventListener("click", () => {
+        if (current > 0) current--;
+        showSlide(current);
+        validateForm();
     });
 
-    // textarea の初期高さを設定
-    answerTextarea.addEventListener("input", function () {
-        autoResizeTextarea(answerTextarea);
+    // 次へボタンの挙動
+    document.getElementById("next-quiz").addEventListener("click", () => {
+        if (current < slides.length - 1) current++;
+        showSlide(current);
+        validateForm();
     });
 
-    // 選択肢の種類に応じて表示する入力欄を切り替える関数
-    const radioButtons = document.getElementsByName('choice_type');
-    const textGroup = document.getElementById('text_choices_group');
-    const imageGroup = document.getElementById('image_choices_group');
+    // 最初のスライドを表示
+    showSlide(current);
+    validateForm();
 
-    function updateChoiceInput() {
-        const selected = document.querySelector('input[name="choice_type"]:checked').value;
+    // 解答欄を選択肢形式に応じて切り替える関数
+    function switchAnswerInput(questionIndex, type) {
+        const container = document.getElementById(`answer_container_${questionIndex}`);
+        if (!container) return;
 
-        if (selected === 'none') {
-            textGroup.style.display = 'none';
-            imageGroup.style.display = 'none';
-        } else if (selected === 'text') {
-            textGroup.style.display = 'block';
-            imageGroup.style.display = 'none';
-        } else if (selected === 'image') {
-            textGroup.style.display = 'none';
-            imageGroup.style.display = 'block';
-        }
-    }
+        // 中身を初期化し、ラベルを挿入
+        container.innerHTML = `<label for="answer_${questionIndex}">解答:</label><br>`;
 
-    // 初期状態設定＋イベントリスナー登録
-    radioButtons.forEach(btn => btn.addEventListener('change', updateChoiceInput));
-    updateChoiceInput();  // 初期化
-
-
-    // 選択肢がある場合の動的な選択肢入力欄の生成（文字）
-    const numChoicesInput = document.getElementById('text_num_choices');
-    const dynamicChoicesDiv = document.getElementById('dynamic_text_choices');
-
-    // 選択肢入力欄を numChoicesInput の値だけ生成
-    function renderChoices() {
-        dynamicChoicesDiv.innerHTML = '';
-        const num = parseInt(numChoicesInput.value, 10) || 2;
-        for (let i = 0; i < num; i++) {
-            const textarea = document.createElement('textarea');
-            textarea.id = `choice_${i + 1}`;
-            textarea.name = 'choices';
+        // 選択肢ありの場合（テキストまたは画像）
+        if (type === "text" || type === "image") {
+            const input = document.createElement("input");
+            input.type = "text";
+            input.id = `answer_${questionIndex}`;
+            input.name = `answer_${questionIndex}`;
+            input.placeholder = "例: 1,3";
+            input.pattern = "[0-9,]+";
+            input.required = true;
+            input.addEventListener("input", validateForm);
+            container.appendChild(input);
+        } else {
+            // 記述式など（選択肢なし）の場合
+            const textarea = document.createElement("textarea");
+            textarea.id = `answer_${questionIndex}`;
+            textarea.name = `answer_${questionIndex}`;
             textarea.rows = 2;
             textarea.cols = 50;
-            textarea.placeholder = `選択肢${i + 1}：選択肢番号等は入力しないでください。`;
-            textarea.style.display = 'block';
-            textarea.style.marginBottom = '8px';
-            // 高さ自動調整
-            textarea.addEventListener('input', function () {
-                textarea.style.height = 'auto';
-                textarea.style.height = textarea.scrollHeight + 'px';
+            textarea.required = true;
+            textarea.addEventListener("input", validateForm);
+            container.appendChild(textarea);
+        }
+    }
+
+    // 各設問ごとの初期設定
+    for (let i = 1; i <= totalQuestions; i++) {
+        const radios = document.querySelectorAll(`input[name="choice_type_${i}"]`);
+        const textGroup = document.getElementById(`text_choices_group_${i}`);
+        const imageGroup = document.getElementById(`image_choices_group_${i}`);
+
+        // ラジオボタンの変更に応じて入力欄切り替え
+        radios.forEach(rb => {
+            rb.addEventListener("change", () => {
+                const value = document.querySelector(`input[name="choice_type_${i}"]:checked`).value;
+                switchAnswerInput(i, value);
+
+                // 選択肢の表示切り替え
+                if (value === "text") {
+                    textGroup.style.display = "block";
+                    imageGroup.style.display = "none";
+                } else if (value === "image") {
+                    textGroup.style.display = "none";
+                    imageGroup.style.display = "block";
+                } else {
+                    textGroup.style.display = "none";
+                    imageGroup.style.display = "none";
+                }
+
+                validateForm();
             });
-            dynamicChoicesDiv.appendChild(textarea);
+        });
+
+        // 初期状態では選択肢なし
+        switchAnswerInput(i, "none");
+
+        // 選択肢を描画する関数（テキスト or 画像）
+        const renderChoices = (type) => {
+            const numInput = document.getElementById(`${type}_num_choices_${i}`);
+            const container = document.getElementById(`dynamic_${type}_choices_${i}`);
+            if (!numInput || !container) return;
+
+            const num = parseInt(numInput.value, 10) || 2;
+            container.innerHTML = "";
+
+            for (let j = 0; j < num; j++) {
+                const wrapper = document.createElement("div");
+                wrapper.style.display = "flex";
+                wrapper.style.alignItems = "center";
+                wrapper.style.marginBottom = "8px";
+
+                const label = document.createElement("span");
+                label.textContent = `${j + 1}.`;
+                label.style.marginRight = "8px";
+
+                if (type === "text") {
+                    const textarea = document.createElement("textarea");
+                    textarea.name = `choices_${i}`;
+                    textarea.rows = 2;
+                    textarea.cols = 50;
+                    textarea.addEventListener("input", validateForm);
+                    wrapper.appendChild(label);
+                    wrapper.appendChild(textarea);
+                } else {
+                    const input = document.createElement("input");
+                    input.type = "file";
+                    input.name = `image_choices_${i}`;
+                    input.accept = "image/*";
+                    input.addEventListener("change", validateForm);
+                    wrapper.appendChild(label);
+                    wrapper.appendChild(input);
+                }
+
+                container.appendChild(wrapper);
+            }
+        };
+
+        // 選択肢数の変更に応じて描画
+        const textInput = document.getElementById(`text_num_choices_${i}`);
+        if (textInput) {
+            textInput.addEventListener("input", () => renderChoices("text"));
+            renderChoices("text");
+        }
+
+        const imageInput = document.getElementById(`image_num_choices_${i}`);
+        if (imageInput) {
+            imageInput.addEventListener("input", () => renderChoices("image"));
+            renderChoices("image");
         }
     }
 
-    numChoicesInput.addEventListener('input', renderChoices);
-    renderChoices();
+    // フォーム全体のバリデーションチェック
+    function validateForm() {
+        let allValid = true;
 
-    // 選択肢がある場合の動的な選択肢入力欄の生成（画像）
-    const numImageChoicesInput = document.getElementById('image_num_choices');
-    const dynamicImageChoicesDiv = document.getElementById('dynamic_image_choices');
-    // 選択肢入力欄を numChoicesInput の値だけ生成
-    function renderImageChoices() {
-        dynamicImageChoicesDiv.innerHTML = '';
-        const num = parseInt(numImageChoicesInput.value, 10) || 2;
-        for (let i = 0; i < num; i++) {
-            const input = document.createElement('input');
-            input.type = 'file';
-            input.id = `image_choice_${i + 1}`;
-            input.name = 'image_choices';
-            input.accept = 'image/*';
-            input.style.display = 'block';
-            input.style.marginBottom = '8px';
-            dynamicImageChoicesDiv.appendChild(input);
+        for (let i = 1; i <= totalQuestions; i++) {
+            const questionField = document.getElementById(`question_${i}`);
+            const answerField = document.getElementById(`answer_${i}`);
+
+            // 問題文の変更に合わせて再度validateFormを呼ぶようにする
+            if (questionField) {
+                questionField.addEventListener("input", validateForm);
+            }
+
+            // 問題文・解答欄の中身が空ならNG
+            if (!questionField || questionField.value.trim() === "") allValid = false;
+            if (!answerField || answerField.value.trim() === "") allValid = false;
+
+            // 選択肢の内容もチェック（選択されていない場合は無視）
+            const choiceType = document.querySelector(`input[name="choice_type_${i}"]:checked`)?.value;
+
+            if (choiceType === "text") {
+                const choices = document.querySelectorAll(`#dynamic_text_choices_${i} textarea`);
+                const textGroup = document.getElementById(`text_choices_group_${i}`);
+                if (textGroup && textGroup.style.display !== "none") {
+                    choices.forEach(choice => {
+                        if (choice.value.trim() === "") allValid = false;
+                    });
+                }
+            } else if (choiceType === "image") {
+                const choices = document.querySelectorAll(`#dynamic_image_choices_${i} input[type="file"]`);
+                const imageGroup = document.getElementById(`image_choices_group_${i}`);
+                if (imageGroup && imageGroup.style.display !== "none") {
+                    choices.forEach(choice => {
+                        if (!choice.files || choice.files.length === 0) allValid = false;
+                    });
+                }
+            }
         }
+
+        // 全ての問題が有効な場合のみ送信ボタンを表示
+        submitButton.style.display = allValid ? "block" : "none";
     }
-    numImageChoicesInput.addEventListener('input', renderImageChoices);
-    renderImageChoices();
+
+    // 最終確認としてもう一度呼ぶ
+    validateForm();
+
+    // フォーム送信時、非表示スライドのrequired属性を一時的に解除
+    document.getElementById("quiz-form").addEventListener("submit", (e) => {
+        slides.forEach(slide => {
+            if (slide.style.display === "none") {
+                slide.querySelectorAll("[required]").forEach(input => {
+                    input.dataset.originalRequired = "true";
+                    input.required = false;
+                });
+            }
+        });
+
+        // ローディング画面を表示
+        showLoading();
+    });
 });

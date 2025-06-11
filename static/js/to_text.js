@@ -56,7 +56,7 @@ document.addEventListener("DOMContentLoaded", function () {
                             cropper = new Cropper(previewImage, {
                                 viewMode: 1,
                                 aspectRatio: NaN,
-                                autoCropArea: 0.8,
+                                autoCropArea: 1.0,
                             });
 
                             upForm.style.display = "none";
@@ -77,7 +77,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 cropper = new Cropper(previewImage, {
                     viewMode: 1,
                     aspectRatio: NaN,
-                    autoCropArea: 0.8,
+                    autoCropArea: 1.0,
                 });
 
                 upForm.style.display = "none";
@@ -103,28 +103,37 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // 画像をサーバーへ送信する関数
     function sendImageToServer(imageBase64) {
+        function base64ToBlob(base64) {
+            const byteString = atob(base64.split(',')[1]);
+            const mimeString = base64.split(',')[0].split(':')[1].split(';')[0];
+            const ab = new ArrayBuffer(byteString.length);
+            const ia = new Uint8Array(ab);
+            for (let i = 0; i < byteString.length; i++) {
+                ia[i] = byteString.charCodeAt(i);
+            }
+            return new Blob([ab], { type: mimeString });
+        }
+
+        const blob = base64ToBlob(imageBase64);
+        const formData = new FormData();
+        formData.append("image", blob, "cropped.png");
+
         fetch("/ocr/", {
             method: "POST",
+            body: formData,
             headers: {
-                "Content-Type": "application/json",
-                "X-CSRFToken": getCsrfToken(),
+                "X-CSRFToken": getCsrfToken(),  // ← これは必要
+                // "Content-Type": ... ← これは書かない!!
             },
-            body: JSON.stringify({ image: imageBase64 }),
         })
             .then((response) => response.json())
             .then((data) => {
                 textarea.value = data.text || "認識できませんでした";
-                const placeholder = document.getElementById("placeholder-text");
-                if (data.text) {
-                    placeholder.style.display = "none";
-                }
-                autoResizeTextarea(textarea); // 高さを自動調整
-                hideLoading(); // ロード画面非表示
+                hideLoading();
             })
             .catch((error) => {
-                console.error("エラー:", error);
-                resultBox.textContent = "エラーが発生しました";
-                hideLoading(); // ロード画面非表示
+                console.error("送信エラー:", error);
+                hideLoading();
             });
     }
 

@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}ルーム{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/view_folder.css' %}">
+<style>
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<!-- <script src="{% static 'js/to_text.js' %}"></script> -->
+{% endblock %}
+
+{% block content %}
+<div class="center-box">
+    <div class="header-row">
+        <a href="{% url 'inside_room' %}" class="close-btn">✕</a>
+        <div class="folder-title">{{ folder.folder_name }}</div>
+    </div>
+
+    <table>
+        <tbody class="folder-style-list">
+            {% for question in questions %}
+            <tr>
+                <td>
+                    <a href="{% url 'view_questions' %}?question_id={{ question.question_id }}" class="folder-item">
+                        <div class="folder-name">
+                            {{ question.content|slice:":20" }}{% if question.content|length > 20 %}...{% endif %}
+                        </div>
+                    </a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td>このフォルダーには問題がありません。</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    {% include 'pagination.html' %}
+
+</div>
+{% endblock %}

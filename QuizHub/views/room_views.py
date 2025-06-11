@@ -25,7 +25,9 @@ def join_room(request):
             return redirect('join_room')
 
         # セッションに保存
+        request.session['room_id'] = room['room_id']
         request.session['room_name'] = room_name
+        request.session['room_password'] = room_password
         request.session['is_editable'] = room['is_editable']
 
         return redirect('inside_room')
@@ -33,11 +35,29 @@ def join_room(request):
     return render(request, 'join_room.html')
 
 def inside_room(request):
+    room_id = request.session.get('room_id')
     room_name = request.session.get('room_name')
-    if not room_name:
+    room_password = request.session.get('room_password')
+
+    if not room_id:
         return redirect('join_room')
 
-    return render(request, 'inside_room.html', {'room_name': room_name})
+    # ルームに紐づくフォルダー一覧を取得
+    # room_folders テーブルを使って関連 folder_id を取得し、question_folders から名前を取る
+    room_folders = supabase.table("room_folders").select("*").eq("room_id", room_id).execute().data
+
+    folder_ids = [rf["folder_id"] for rf in room_folders]
+
+    folders = []
+    if folder_ids:
+        folders_response = supabase.table("question_folders").select("*").in_("folder_id", folder_ids).execute()
+        folders = folders_response.data
+
+    return render(request, 'inside_room.html', {
+        'room_name': room_name,
+        'room_password': room_password,
+        'folders': folders,
+    })
 
 # ルーム退出
 from django.contrib import messages  # メッセージ機能を使うためにインポート

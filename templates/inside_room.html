@@ -1,25 +1,67 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}ルーム参加{% endblock %}
+{% block title %}ルーム{% endblock %}
 
-<!-- CSS -->
 {% block extra_css %}
-<!-- <link rel="stylesheet" href="{% static 'css/join_room.css' %}"> -->
+<link rel="stylesheet" href="{% static 'css/inside_room.css' %}">
 {% endblock %}
 
-<!-- JS -->
 {% block extra_js %}
-<!-- <script src="{% static 'js/to_text.js' %}"></script> -->
+<script src="{% static 'js/inside_room.js' %}"></script>
 {% endblock %}
 
-<!-- メイン -->
 {% block content %}
-<h2>ルームID: {{ room_name }}</h2>
+<div class="room-container">
 
-<form method="post" action="{% url 'leave_room' %}">
-    {% csrf_token %}
-    <button type="submit">ルーム退出</button>
-</form>
 
+    <!-- 左カラム（メイン） -->
+    <div class="main-content">
+        <table>
+            <tr>
+                <th>フォルダー一覧</th>
+            </tr>
+            <tr>
+                <td>
+                    {% if folders %}
+                    <div class="folder-style-list">
+                        {% for folder in folders %}
+                        <a href="{% url 'view_folder' folder.folder_id %}" class="folder-item">
+                            <div class="folder-name">{{ folder.folder_name }}</div>
+                        </a>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <p>フォルダーがありません。</p>
+                    {% endif %}
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- 右カラム（サイドパネル） -->
+    <div id="toast" class="toast">Copied!</div>
+    <div class="side-panel">
+        <div class="room-info">
+            <p><strong>ルームID：</strong>
+                <span id="room-id">{{ room_name }}</span>
+                <span class="dli-copy" data-copy-target="room-id"><span></span></span>
+            </p>
+
+            <p><strong>パスワード：</strong>
+                <span id="room-password" class="password-field">*****</span>
+                <input type="hidden" id="real-password" value="{{ room_password }}">
+                <button onclick="togglePassword()" class="toggle-password-btn">👁</button>
+                <span class="dli-copy" data-copy-target="room-password"><span></span></span>
+            </p>
+
+            <form method="post" action="{% url 'leave_room' %}">
+                {% csrf_token %}
+                <button type="submit" class="leave-button">ルーム退出</button>
+            </form>
+        </div>
+
+    </div>
+
+</div>
 {% endblock %}

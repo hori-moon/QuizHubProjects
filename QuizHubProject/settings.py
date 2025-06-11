@@ -131,3 +131,5 @@ STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
 
+DATA_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024  # 10MBまで許容する例
+
