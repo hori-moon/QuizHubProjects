@@ -1,0 +1,90 @@
+/* 全体レイアウト調整 */
+.body {
+    margin-top: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+/* room-boxのサイズと中央配置 */
+.room-box {
+    width: 25%;
+    /* 画面幅の25% */
+    padding: 20px;
+    background-color: #f9f9f9;
+    /* 背景色を設定（任意） */
+    border: 1px solid #ddd;
+    /* 枠線を設定（任意） */
+    border-radius: 8px;
+    /* 角を丸くする（任意） */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    /* 影を追加（任意） */
+}
+
+input[type="checkbox"] {
+    position: relative;
+    width: 16px;
+    height: 16px;
+    border: 1px solid #000;
+    vertical-align: -5px;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+input[type="checkbox"]:checked:before {
+    position: absolute;
+    top: 1px;
+    left: 4px;
+    transform: rotate(50deg);
+    width: 4px;
+    height: 8px;
+    border-right: 2px solid #000;
+    border-bottom: 2px solid #000;
+    content: '';
+}
+
+/* 入力欄 */
+.room-input {
+    padding: 10px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    font-size: 16px;
+}
+
+/* 作成ボタン（飾り） */
+.create-btn {
+    padding: 10px 20px;
+    font-size: 16px;
+    background: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+/* パスワード入力欄の非表示スタイル */
+.hidden {
+    visibility: hidden;
+    /* 要素を非表示にするがスペースを保持 */
+    opacity: 0;
+    /* 見えなくする */
+    height: 0;
+    /* 高さをゼロにする */
+    overflow: hidden;
+    /* 内容を隠す */
+    transition: opacity 0.3s ease;
+    /* スムーズな表示切り替え */
+}
+
+/* パスワード入力欄の表示スタイル */
+.visible {
+    visibility: visible;
+    /* 要素を表示 */
+    opacity: 1;
+    /* 完全に見えるようにする */
+    height: auto;
+    /* 元の高さに戻す */
+    transition: opacity 0.3s ease;
+    /* スムーズな表示切り替え */
+}

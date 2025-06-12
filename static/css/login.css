@@ -15,8 +15,8 @@
     border-radius: 5px;
 }
 
-/* 「新規作成」ボタンを横長に */
-.login-box .create-button {
+/* ログインボタンを横長に */
+.login-box .login-button {
     width: 50%;
     padding: 12px;
     margin-top: 20px;
@@ -27,19 +27,17 @@
     font-size: 16px;
 }
 
-/* 「ログイン」ボタンを右下に寄せる */
-.login-box .login-button {
-    float: right;
-    margin: 10px 20% 0 0;
-    /* 右寄せ＆下寄せ調整 */
-    padding: 10px 20px;
-    background-color: #727679;
-    color: white;
-    border: none;
-    border-radius: 5px;
+/* 新規作成リンク */
+.login-box .create-link {
+    display: block;
+    margin-top: 15px;
+    color: #727679;
+    text-decoration: none;
+    font-size: 14px;
 }
 
 /* ホバー効果 */
-.login-box button:hover {
+.login-box button:hover,
+.login-box .create-link:hover {
     opacity: 0.8;
 }

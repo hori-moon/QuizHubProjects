@@ -3,26 +3,36 @@
 
 {% block title %}新規アカウント作成{% endblock %}
 
-<!-- CSS -->
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/create_account.css' %}">
 {% endblock %}
 
-<!-- JS -->
-{% block extra_js %}
-<!-- <script src="{% static 'js/to_text.js' %}"></script> -->
-{% endblock %}
-
-<!-- メイン -->
 {% block content %}
-
 <div class="center-box">
     <h2>アカウント作成</h2>
-    <input type="text" id="user_name" name="user_name" placeholder="ユーザー名" required>
-    <input type="password" id="user_password" name="user_password" placeholder="パスワード" required>
-    <div class="button-wrapper">
-        <button type="submit">作成</button>
-    </div>
-</div>
 
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}" {% endif %}>
+            {{ message }}
+            </li>
+            {% endfor %}
+    </ul>
+    {% endif %}
+
+
+
+    <form method="POST" action="{% url 'create_account' %}">
+
+        {% csrf_token %}
+        <br>
+        <input type="text" id="user_name" name="user_name" placeholder="name" required>
+        </br>
+        <input type="password" id="user_password" name="user_password" placeholder="password" required>
+        <div class="button-wrapper">
+            <button type="submit">作成</button>
+        </div>
+    </form>
+</div>
 {% endblock %}

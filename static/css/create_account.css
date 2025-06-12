@@ -14,12 +14,13 @@
     width: 250px;
 }
 
-.button-wrapper {
-    width: 270px;
-    text-align: right;
-}
-
-.button-wrapper button {
-    padding: 8px 16px;
+.center-box button {
+    width: 50%;
+    padding: 12px;
+    margin-top: 20px;
+    background-color: #8d918de9;
+    color: white;
+    border: none;
+    border-radius: 5px;
     font-size: 16px;
 }
