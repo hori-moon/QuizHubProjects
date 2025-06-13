@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}正誤一覧{% endblock %}
+
+{% block content %}
+<h2>解答結果</h2>
+<table>
+    <tr>
+        <th>問題</th>
+        <th>あなたの解答</th>
+        <th>正誤</th>
+    </tr>
+    {% for record in records %}
+    <tr>
+        <td>{{ record.question_content }}</td>
+        <td>{{ record.answered_contents|join:", " }}</td>
+        <td>
+            {% if record.is_correct %}
+            <span style="color:green;">○ 正解</span>
+            {% else %}
+            <span style="color:red;">× 不正解</span>
+            {% endif %}
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+<a href="{% url 'inside_room' %}" class="nav-button">ルームへ戻る</a>
+{% endblock %}
