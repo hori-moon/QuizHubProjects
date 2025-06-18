@@ -68,7 +68,17 @@ document.addEventListener("DOMContentLoaded", function () {
             textarea.cols = 50;
             textarea.required = true;
             textarea.addEventListener("input", validateForm);
+            const checkbox = document.createElement("input");
+            checkbox.type = "checkbox";
+            checkbox.id = `is_answer_${questionIndex}`;
+            checkbox.name = `is_answer_${questionIndex}`;
+            checkbox.checked = true; // デフォルトでチェック
+            const span = document.createElement("span");
+            span.textContent = "この回答は完答ですか？";
             container.appendChild(textarea);
+            container.appendChild(document.createElement("br"));
+            container.appendChild(checkbox);
+            container.appendChild(span);
         }
     }
 

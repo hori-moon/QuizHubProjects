@@ -31,6 +31,6 @@ urlpatterns = [
     path('create_account/', views.create_account, name='create_account'),
     path('login/', views.login_view, name='login'),
     path('logout/', views.logout_view, name='logout'),
-    path('ocr/', views.ocr_image, name='ocr_image'),
+    path("ocr/", views.ocr_image, name="ocr"),
     path('admin/', admin.site.urls),
 ]

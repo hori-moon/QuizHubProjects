@@ -51,20 +51,18 @@
                             style="display: none;">
                             <label>選択肢の数:</label><br>
                             <input type="number" name="text_num_choices_{{ i }}" id="text_num_choices_{{ i }}" value="4"
-                                min="2" required>
+                                min="2">
                             <div id="dynamic_text_choices_{{ i }}" class="dynamic-choice-group"></div>
                         </div>
                         <div class="form-group image_choices_group" id="image_choices_group_{{ i }}"
                             style="display: none;">
                             <label>選択肢の数:</label><br>
                             <input type="number" name="image_num_choices_{{ i }}" id="image_num_choices_{{ i }}"
-                                value="4" min="2" required>
+                                value="4" min="2">
                             <div id="dynamic_image_choices_{{ i }}" class="dynamic-choice-group"></div>
                         </div>
-                        <div class="form-group" id="answer_container_{{ i }}">
-                            <label for="answer_{{ i }}">解答:</label><br>
-                            <textarea id="answer_{{ i }}" name="answer_{{ i }}" rows="2" cols="50" required></textarea>
-                        </div>
+                        <div class="form-group" id="answer_container_{{ i }}"></div>
+
                     </div>
                     {% endfor %}
                 </div>
