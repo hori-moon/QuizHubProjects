@@ -87,7 +87,7 @@ def to_set_quiz(request):
             supabase.table("questions").insert(question_data).execute()
 
         # 全問題の挿入が終わったら、一覧表示画面へリダイレクト
-        return redirect("join_room")
+        return redirect("to_set_folder")
 
     # GETリクエスト時は問題登録フォームを表示
     return render(request, "to_set_quiz.html")
