@@ -1,27 +1,52 @@
-/* メインコンテンツの中央寄せ設定 */
-.main {
-    flex: 1;
+/* ページ全体の中央2カラムレイアウト */
+.main-container {
     display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 40px; /* 左右の余白 */
+    margin: 40px auto;
+    max-width: 1200px;
+    padding: 0 20px;
+    box-sizing: border-box;
+    position: relative;
 }
 
-.folder-section, .question-section {
+/* 中央の縦線 */
+.main-container::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 1px;
+    background-color: #ccc;
+}
+
+/* 左右カラムの共通スタイル */
+.folder-section,
+.question-section {
+    flex: 1;
+    max-width: 500px;
     padding: 20px;
     border: 1px solid #ddd;
     border-radius: 10px;
-    margin: 20px;
     background-color: #f9f9f9;
 }
 
-.folder-list, .question-list {
+/* リスト関係 */
+.folder-list,
+.question-list {
     list-style: none;
     padding-left: 0;
 }
 
-.folder-list li, .question-list li {
+.folder-list li,
+.question-list li {
     margin: 10px 0;
     font-size: 16px;
 }
 
+/* フォルダー名入力・ボタン */
 #new-folder-name {
     padding: 8px;
     margin-right: 10px;
@@ -30,7 +55,8 @@
     width: 200px;
 }
 
-#create-folder-btn, .question-section button {
+#create-folder-btn,
+.question-section button {
     padding: 8px 12px;
     border: none;
     background-color: #3f51b5;
@@ -39,6 +65,7 @@
     cursor: pointer;
 }
 
-#create-folder-btn:hover, .question-section button:hover {
+#create-folder-btn:hover,
+.question-section button:hover {
     background-color: #303f9f;
 }

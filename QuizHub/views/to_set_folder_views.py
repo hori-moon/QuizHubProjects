@@ -1,5 +1,4 @@
 from ..services.supabase_client import supabase
-from django.core.paginator import Paginator
 from django.shortcuts import render
 from django.http import Http404
 import re

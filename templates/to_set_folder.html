@@ -12,45 +12,44 @@
 {% endblock %}
 
 {% block content %}
-<div class="folder-section">
-    <h2>既存のフォルダーに追加</h2>
-    {% if folders %}
-    <ul class="folder-list">
-        {% for folder in folders %}
-        <li>
-            <label>
-                <input type="radio" name="selected_folder" value="{{ folder.folder_id }}">
-                {{ folder.folder_name }}
-            </label>
-        </li>
-        {% endfor %}
-    </ul>
-    {% else %}
-    <p>フォルダーが見つかりません。</p>
-    {% endif %}
-
-    <h2>新しいフォルダーを作成</h2>
-    <input type="text" id="new-folder-name" placeholder="新しいフォルダー名">
-    <button id="create-folder-btn">作成</button>
-</div>
-
-<hr>
-
-<div class="question-section">
-    <h2>問題一覧（降順）</h2>
-    <form id="add-to-folder-form" method="post">
-        {% csrf_token %}
-        <ul class="question-list">
-            {% for question in questions %}
+<div class="main-container">
+    <div class="folder-section">
+        <h2>既存のフォルダーに追加</h2>
+        {% if folders %}
+        <ul class="folder-list">
+            {% for folder in folders %}
             <li>
                 <label>
-                    <input type="checkbox" name="question_ids" value="{{ question.id }}">
-                    {{ question.content|default:"（タイトルなし）" }}
+                    <input type="radio" name="selected_folder" value="{{ folder.folder_id }}">
+                    {{ folder.folder_name }}
                 </label>
             </li>
             {% endfor %}
         </ul>
-        <button type="submit">選択した問題をフォルダーに追加</button>
-    </form>
+        {% else %}
+        <p>フォルダーが見つかりません。</p>
+        {% endif %}
+
+        <h2>新しいフォルダーを作成</h2>
+        <input type="text" id="new-folder-name" placeholder="新しいフォルダー名">
+        <button id="create-folder-btn">作成</button>
+    </div>
+    <div class="question-section">
+        <h2>問題一覧（降順）</h2>
+        <form id="add-to-folder-form" method="post">
+            {% csrf_token %}
+            <ul class="question-list">
+                {% for question in questions %}
+                <li>
+                    <label>
+                        <input type="checkbox" name="question_ids" value="{{ question.id }}">
+                        {{ question.content|default:"問題なし" }}
+                    </label>
+                </li>
+                {% endfor %}
+            </ul>
+            <button type="submit">選択した問題をフォルダーに追加</button>
+        </form>
+    </div>
 </div>
 {% endblock %}
