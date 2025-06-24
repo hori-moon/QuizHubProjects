@@ -19,7 +19,7 @@ def create_room(request):
             response = supabase.table('rooms').insert(data).execute()
             print(f"[DEBUG] insert response: {response}")
         except Exception as e:
-            messages.error(request, f"Supabase登録中に例外が発生しました: {e}")
+            messages.error(request, f"ルームが既に存在しています ")
             return render(request, 'create_room.html')
 
         # ルーム参加ページへリダイレクト（情報は持たせない）
