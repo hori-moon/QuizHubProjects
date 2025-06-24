@@ -44,6 +44,6 @@
 
 .messages {
     list-style-type: none;
-    /* ←「・」を消す */
+    /* 「・」を消す */
     padding: 0;
 }

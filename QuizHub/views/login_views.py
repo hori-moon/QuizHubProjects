@@ -10,6 +10,7 @@ def login_view(request):
         name = request.POST.get('name')
         password = request.POST.get('password')
 
+        #メッセージ表示
         try:
             response = supabase.table('users').select('name, password').eq('name', name).execute()
             print(f"[DEBUG] Supabase response: {response.data}")
