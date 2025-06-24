@@ -18,7 +18,7 @@
 <div class="body">
     <div class="room-box">
         <h2>ルーム作成</h2>
-        <form method="post">
+        <form method="post" action="{% url 'create_room' %}">
             {% csrf_token %}
             <label for="room_name">ルーム名:</label>
             <input type="text" id="room_name" name="room_name" placeholder="{{ random_room_name }}" class="room-input">
@@ -27,12 +27,23 @@
             <label for="use_password">パスワードを使用する</label>
             <br>
             <div id="password_field">
-                <label for="password">パスワード:</label>
-                <input type="password" id="password" name="password" class="room-input">
+                <label for="room_password">パスワード:</label>
+                <input type="password" id="room_password" name="room_password" class="room-input">
             </div>
             <br>
             <button type="submit" class="create-btn">作成</button>
         </form>
     </div>
 </div>
+
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}" {% endif %}>
+        {{ message }}
+        </li>
+        {% endfor %}
+</ul>
+{% endif %}
+
 {% endblock %}
