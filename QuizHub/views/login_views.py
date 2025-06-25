@@ -9,50 +9,49 @@ User = get_user_model()  # 拡張ユーザーモデルを取得
 
 def login_view(request):
     if request.method == 'POST':
-        action = request.POST.get('action')
         name = request.POST.get('name')
         password = request.POST.get('password')
 
-        print(f"[DEBUG] POST received with action={action}, name={name}")
+        try:
+            # Supabaseでユーザー取得
+            response = supabase.table('users') \
+                .select('user_id, name, password') \
+                .eq('name', name) \
+                .execute()
 
-        if action == 'create':
-            print("[DEBUG] Create action triggered.")
-            return redirect('create_account')
+            print(f"[DEBUG] Supabase response: {response.data}")
+            users = response.data
 
-        # Supabaseでユーザー取得
-        response = supabase.table('users') \
-            .select('user_id, name, password') \
-            .eq('name', name) \
-            .execute()
+            if not users:
+                print("[DEBUG] User not found.")
+                messages.error(request, 'ユーザーが見つかりません。')
+                return render(request, 'login.html')
 
-        print(f"[DEBUG] Supabase response: {response.data}")
-        users = response.data
+            user_data = users[0]
+            supabase_user_id = user_data.get('user_id')
 
-        if not users:
-            print("[DEBUG] User not found.")
-            messages.error(request, 'ユーザーが見つかりません。')
-            return render(request, 'login.html')
+            if check_password(password, user_data['password']):
+                print("[DEBUG] Password match. Logging in user.")
+                
+                # Djangoユーザー作成または取得
+                django_user, created = User.objects.get_or_create(username=name)
 
-        user_data = users[0]
-        supabase_user_id = user_data.get('user_id')  # ← ここ！
+                # Supabase ID を保存（カスタムフィールドがある場合）
+                if created or not getattr(django_user, 'supabase_user_id', None):
+                    django_user.supabase_user_id = supabase_user_id
+                    django_user.save()
 
-        if check_password(password, user_data['password']):
-            print("[DEBUG] Password match. Logging in user.")
-            
-            # Djangoユーザー作成または取得
-            django_user, created = User.objects.get_or_create(username=name)
+                login(request, django_user)
+                return redirect('to_text')
 
-            # Supabase ID を保存（必要に応じて）
-            if created or not getattr(django_user, 'supabase_user_id', None):
-                django_user.supabase_user_id = supabase_user_id
-                django_user.save()
+            else:
+                print("[DEBUG] Password mismatch.")
+                messages.error(request, 'パスワードが違います。')
+                return render(request, 'login.html')
 
-            login(request, django_user)
-            return redirect('to_text')
-
-        else:
-            print("[DEBUG] Password mismatch.")
-            messages.error(request, 'パスワードが違います。')
+        except Exception as e:
+            print(f"[DEBUG] Exception during login: {e}")
+            messages.error(request, f"ログイン中にエラーが発生しました: {e}")
             return render(request, 'login.html')
 
     print("[DEBUG] GET request received.")

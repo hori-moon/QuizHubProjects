@@ -1,11 +1,12 @@
 document.addEventListener("DOMContentLoaded", function () {
     // HTML要素を取得
-    const upForm = document.getElementById("upload-form");            // アップロードフォーム
-    const fileInput = document.getElementById("file-input");          // 画像ファイル選択用
-    const previewImage = document.getElementById("preview-image");    // プレビュー表示用の画像タグ
-    const okButton = document.getElementById("crop-ok");              // トリミング確定ボタン
-    const resultBox = document.querySelector(".result-box");          // OCR結果表示用ボックス
-    const textarea = document.getElementById("ocr-result");           // OCR結果表示用テキストエリア
+    const upForm = document.getElementById("upload-form");                  // アップロードフォーム
+    const fileInput = document.getElementById("file-input");                // 画像ファイル選択用
+    const previewImage = document.getElementById("preview-image");          // プレビュー表示用の画像タグ
+    const okButton = document.getElementById("crop-ok");                    // トリミング確定ボタン
+    const resultBox = document.querySelector(".result-box");                // OCR結果表示用ボックス
+    const placeholderText = document.getElementById("placeholder-text");    // 文字おこしの結果の文字
+    const textarea = document.getElementById("ocr-result");                 // OCR結果表示用テキストエリア
     const loadingOverlay = document.getElementById("loading-overlay");
     let cropper; // Cropper.js インスタンス
 
@@ -122,13 +123,14 @@ document.addEventListener("DOMContentLoaded", function () {
             method: "POST",
             body: formData,
             headers: {
-                "X-CSRFToken": getCsrfToken(),  // ← これは必要
-                // "Content-Type": ... ← これは書かない!!
+                "X-CSRFToken": getCsrfToken(),
             },
         })
             .then((response) => response.json())
             .then((data) => {
                 textarea.value = data.text || "認識できませんでした";
+                autoResizeTextarea(textarea);
+                placeholderText.style.display = "none";
                 hideLoading();
             })
             .catch((error) => {
@@ -146,6 +148,11 @@ document.addEventListener("DOMContentLoaded", function () {
     // ユーザーの手入力にも対応
     textarea.addEventListener("input", function () {
         autoResizeTextarea(textarea);
+        if (textarea.value.trim() !== "") {
+            placeholderText.style.display = "none";
+        } else {
+            placeholderText.style.display = "block";
+        }
     });
 
     // CookieからCSRFトークンを取得する関数（Django対策）

@@ -41,3 +41,9 @@
 .login-box .create-link:hover {
     opacity: 0.8;
 }
+
+.messages {
+    list-style-type: none;
+    /* 「・」を消す */
+    padding: 0;
+}

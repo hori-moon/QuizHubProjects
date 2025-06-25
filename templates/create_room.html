@@ -18,32 +18,36 @@
 <div class="body">
     <div class="room-box">
         <h2>ルーム作成</h2>
+
+        {# メッセージ表示（フォームのすぐ上） #}
+        {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+            <p class="{{ message.tags }}">{{ message }}</p>
+            {% endfor %}
+        </div>
+        {% endif %}
+
         <form method="post" action="{% url 'create_room' %}">
             {% csrf_token %}
+
             <label for="room_name">ルーム名:</label>
-            <input type="text" id="room_name" name="room_name" placeholder="{{ random_room_name }}" class="room-input">
+            <input type="text" id="room_name" name="room_name" value="{{ room_name|default:'' }}"
+                placeholder="{{ random_room_name }}" class="room-input">
             <br>
+
             <input type="checkbox" id="use_password" name="use_password">
             <label for="use_password">パスワードを使用する</label>
             <br>
+
             <div id="password_field">
                 <label for="room_password">パスワード:</label>
                 <input type="password" id="room_password" name="room_password" class="room-input">
             </div>
             <br>
+
             <button type="submit" class="create-btn">作成</button>
         </form>
     </div>
 </div>
-
-{% if messages %}
-<ul class="messages">
-    {% for message in messages %}
-    <li{% if message.tags %} class="{{ message.tags }}" {% endif %}>
-        {{ message }}
-        </li>
-        {% endfor %}
-</ul>
-{% endif %}
-
 {% endblock %}
