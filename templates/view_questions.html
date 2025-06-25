@@ -17,6 +17,11 @@
     <a href="{% url 'view_folder' folder_id %}" class="nav-button close-button">✕</a>
     <div class="spacer"></div>
 
+    <form method="post" action="{% url 'quiz_result' %}" style="display:inline;">
+        {% csrf_token %}
+        <button type="submit" class="nav-button close-button">終了</button>
+    </form>
+
     {% if prev_question_id %}
     <a href="?question_id={{ prev_question_id }}" class="nav-button prev-button">◁</a>
     {% else %}
