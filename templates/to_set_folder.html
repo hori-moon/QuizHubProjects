@@ -31,8 +31,11 @@
         {% endif %}
 
         <h2>新しいフォルダーを作成</h2>
-        <input type="text" id="new-folder-name" placeholder="新しいフォルダー名">
-        <button id="create-folder-btn">作成</button>
+        <form method="post">
+            {% csrf_token %}
+            <input type="text" id="new-folder-name" name="new-folder-name" placeholder="新しいフォルダー名">
+            <button type="submit" name="create_folder" value="1">作成</button>
+        </form>
     </div>
     <div class="question-section">
         <h2>問題一覧（降順）</h2>

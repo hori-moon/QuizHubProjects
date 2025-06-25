@@ -19,7 +19,7 @@ from django.urls import path
 from QuizHub import views
 
 urlpatterns = [
-    path('', views.to_text, name='to_text'),
+    path('', views.login_view, name='login'),
     path('to_text/', views.to_text, name='to_text'),
     path('to_set_quiz/', views.to_set_quiz, name='to_set_quiz'),
     path('to_set_folder/', views.to_set_folder, name='to_set_folder'),

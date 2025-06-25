@@ -16,6 +16,8 @@ def to_set_quiz(request):
         uuid_pattern = r"^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
         if not re.match(uuid_pattern, user_id):
             user_id = "11111111-1111-1111-1111-111111111111"
+        else:
+            user_id = str(user_id)
 
         # OCR結果と問題数が送信されてきた場合（問題設定の初期表示）
         question_num = request.POST.get("question_num")
