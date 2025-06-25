@@ -14,31 +14,19 @@ logger = logging.getLogger(__name__)
 def ocr_image(request):
     if request.method == 'POST':
         try:
-            logger.debug("リクエスト受信")
-            data = json.loads(request.body)
-            logger.debug("JSON読み込み成功")
+            image_file = request.FILES.get('image')  # ← FormData からのファイル取得
+            if not image_file:
+                return JsonResponse({'error': '画像ファイルがありません'}, status=400)
 
-            if 'image' not in data:
-                logger.warning("画像データがありません")
-                return JsonResponse({'error': '画像データがありません'}, status=400)
-
-            image_data = data['image'].split(',')[1]
-            logger.debug(f"Base64画像サイズ: {len(image_data)}")
-
-            image_bytes = base64.b64decode(image_data)
-            logger.debug("Base64デコード成功")
-
-            image = Image.open(io.BytesIO(image_bytes))
-            logger.debug("画像読み込み成功")
-
-            text = pytesseract.image_to_string(image, lang='jpn')
-            logger.debug("OCR処理成功")
+            image = Image.open(image_file)  # PILで画像オープン
+            text = pytesseract.image_to_string(image, lang='jpn')  # OCR処理
 
             return JsonResponse({'text': text})
         except Exception as e:
             logger.exception("OCR処理中に例外が発生")
             return JsonResponse({'error': str(e)}, status=400)
     return JsonResponse({'error': 'Invalid request'}, status=400)
+
 
 
 
