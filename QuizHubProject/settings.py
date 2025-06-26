@@ -11,10 +11,14 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+import environ
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+env = environ.Env()
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
@@ -73,18 +77,14 @@ WSGI_APPLICATION = 'QuizHubProject.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
+DEBUG = env.bool('DEBUG', default=False)
+SECRET_KEY = env('SECRET_KEY')
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',
-        'USER': 'postgres.bwpiskbyxvkvoxkaxptn',
-        'PASSWORD': 'XV46GusKRDCJWl2J',
-        'HOST': 'aws-0-ap-northeast-1.pooler.supabase.com',
-        'PORT': '6543',
+        'default': env.db(),
     }
 }
-
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
@@ -134,3 +134,5 @@ STATICFILES_DIRS = [
 DATA_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024  # 10MBまで許容する例
 
 AUTH_USER_MODEL = 'QuizHub.CustomUser'
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')

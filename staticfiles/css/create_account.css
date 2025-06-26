@@ -1,0 +1,26 @@
+.center-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 70vh;
+    text-align: center;
+}
+
+.center-box input {
+    margin: 5px;
+    padding: 8px;
+    font-size: 16px;
+    width: 250px;
+}
+
+.center-box button {
+    width: 50%;
+    padding: 12px;
+    margin-top: 20px;
+    background-color: #8d918de9;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+}
