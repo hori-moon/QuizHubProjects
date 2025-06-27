@@ -84,9 +84,7 @@ DEBUG = env.bool('DEBUG', default=False)
 SECRET_KEY = env('SECRET_KEY')
 
 DATABASES = {
-    'default': {
-        'default': env.db(),
-    }
+    'default': env.db(),
 }
 
 # Password validation
