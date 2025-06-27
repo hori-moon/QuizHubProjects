@@ -29,8 +29,11 @@ SECRET_KEY = 'django-insecure-%ri2_ko+i+rxaz&2nb&x5+cu27l5woy2bowi*fdt%9wjqydu=l
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = [
+    "localhost",
+    "127.0.0.1",
+    os.getenv("RENDER_EXTERNAL_HOSTNAME", "quizhubprojects.onrender.com"),
+]
 
 # Application definition
 
