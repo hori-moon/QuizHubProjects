@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}フォルダー 登録{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/to_set_folder.css' %}">
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/to_set_folder.js' %}" defer></script>
+{% endblock %}
+
+{% block content %}
+<form method="post">
+<div class="main-container">
+        <div class="folder-section">
+            <h2>新しいフォルダーを作成</h2>
+            {% csrf_token %}
+            <input type="text" id="new-folder-name" name="new-folder-name" placeholder="新しいフォルダー名">
+            <button type="submit" name="create-folder" value="1">作成</button>
+            <h2>既存のフォルダーに追加</h2>
+            {% if folders %}
+            <ul class="folder-list">
+                {% for folder in folders %}
+                <li>
+                    <label>
+                        <input type="radio" name="selected-folder" value="{{ folder.folder_id }}">
+                        {{ folder.folder_name }}
+                    </label>
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p>フォルダーが見つかりません。</p>
+            {% endif %}
+
+        </div>
+        <div class="question-section">
+            <h2>問題一覧（降順）</h2>
+            <ul class="question-list">
+                {% for question in questions %}
+                <li>
+                    <label>
+                        <input type="checkbox" name="question-ids" value="{{ question.question_id }}">
+                        {{ question.content|default:"問題なし" }}
+                    </label>
+                </li>
+                {% endfor %}
+            </ul>
+            <button type="submit" name="insert-question">選択した問題をフォルダーに追加</button>
+        </div>
+    </div>
+</form>
+{% endblock %}

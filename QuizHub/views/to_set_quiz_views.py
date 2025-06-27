@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect
 from django.conf import settings
 from django.views.decorators.http import require_http_methods
 from ..services.supabase_client import supabase
+import re
 
 
 @require_http_methods(["GET", "POST"])
@@ -10,8 +11,13 @@ def to_set_quiz(request):
     print("to_set_quiz called")
     if request.method == "POST":
         print("POST request received in to_set_quiz")
-        # 認証ユーザーならuser.idを使い、未ログインなら固定のUUIDを使う（仮のユーザーID）
-        user_id = request.user.id if request.user.is_authenticated else '11111111-1111-1111-1111-111111111111'
+        # user_idをPOSTから取得し、形式を検証
+        user_id = request.POST.get("user_id", "")
+        uuid_pattern = r"^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
+        if not re.match(uuid_pattern, user_id):
+            user_id = "11111111-1111-1111-1111-111111111111"
+        else:
+            user_id = str(user_id)
 
         # OCR結果と問題数が送信されてきた場合（問題設定の初期表示）
         question_num = request.POST.get("question_num")
@@ -34,6 +40,7 @@ def to_set_quiz(request):
             # 問題文、回答、選択肢タイプを取得
             question_text = request.POST.get(f"question_{i}")
             answer_text = request.POST.get(f"answer_{i}")
+            check_answer = request.POST.get(f"is_answer_{i}") == "on"
             choice_type = request.POST.get(f"choice_type_{i}")
 
             options = []  # 選択肢を格納するリスト
@@ -60,8 +67,9 @@ def to_set_quiz(request):
             # answer_textは「1,3」のような選択肢番号の文字列か、記述式回答の文字列
             # supabaseのanswersテーブルに挿入するデータ構造を作成
             answer_data = {
-                "correct": [answer_text],  # 正答はリストとして格納
-                "options": options         # 選択肢のリスト
+                "correct": [answer_text],       # 正答はリストとして格納
+                "options": options,             # 選択肢のリスト
+                "complete_answer": check_answer # 完全回答かどうか
             }
 
             print("answer_data:", answer_data)
@@ -81,7 +89,7 @@ def to_set_quiz(request):
             supabase.table("questions").insert(question_data).execute()
 
         # 全問題の挿入が終わったら、一覧表示画面へリダイレクト
-        return redirect("join_room")
+        return redirect("to_set_folder")
 
     # GETリクエスト時は問題登録フォームを表示
     return render(request, "to_set_quiz.html")
