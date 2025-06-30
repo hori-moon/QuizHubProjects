@@ -11,9 +11,16 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+from dotenv import load_dotenv
+import os
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+
+# # Build paths inside the project like this: BASE_DIR / 'subdir'.
+# BASE_DIR = Path(__file__).resolve().parent.parent
+
+# プロジェクトルートの.envを読み込む
 BASE_DIR = Path(__file__).resolve().parent.parent
+load_dotenv(BASE_DIR / '.env')
 
 
 # Quick-start development settings - unsuitable for production
@@ -23,7 +30,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-%ri2_ko+i+rxaz&2nb&x5+cu27l5woy2bowi*fdt%9wjqydu=l'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv("DEBUG", "False") == "True"
 
 ALLOWED_HOSTS = []
 
@@ -67,6 +74,7 @@ TEMPLATES = [
     },
 ]
 
+
 WSGI_APPLICATION = 'QuizHubProject.wsgi.application'
 
 
@@ -76,11 +84,11 @@ WSGI_APPLICATION = 'QuizHubProject.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',
-        'USER': 'postgres.bwpiskbyxvkvoxkaxptn',
-        'PASSWORD': 'XV46GusKRDCJWl2J',
-        'HOST': 'aws-0-ap-northeast-1.pooler.supabase.com',
-        'PORT': '6543',
+        'NAME': os.getenv("DB_NAME"),
+        'USER': os.getenv("DB_USER"),
+        'PASSWORD': os.getenv("DB_PASSWORD"),
+        'HOST': os.getenv("DB_HOST"),
+        'PORT': os.getenv("DB_PORT"),
     }
 }
 
@@ -134,3 +142,6 @@ STATICFILES_DIRS = [
 DATA_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024  # 10MBまで許容する例
 
 AUTH_USER_MODEL = 'QuizHub.CustomUser'
+
+AZURE_OCR_KEY = os.getenv("AZURE_OCR_KEY")
+AZURE_OCR_ENDPOINT = os.getenv("AZURE_OCR_ENDPOINT")
