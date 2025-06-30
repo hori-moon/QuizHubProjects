@@ -10,15 +10,18 @@ from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
+def list_to_pg_array(lst):
+    return "{" + ",".join(str(x) for x in lst) + "}"
 
 def start_random_quiz(request):
     if request.method == 'POST':
         folder_id = request.POST.get('folder_id')
+        pg_array_str = list_to_pg_array(folder_id)
         num_questions = int(request.POST.get('num_questions', 0))
 
         all_questions = supabase.table('questions') \
             .select('question_id') \
-            .eq('folder_id', folder_id) \
+            .filter("folder_id", "cs", pg_array_str)  \
             .execute().data
 
         all_ids = [q['question_id'] for q in all_questions]
@@ -61,7 +64,7 @@ def view_questions(request):
 
     response = supabase.table('questions') \
         .select('question_id, content, folder_id, answer_id') \
-        .eq('question_id', question_id).execute()
+        .eq('question_id', int(question_id)).execute()
     questions = response.data if response.data else []
 
     if questions:
@@ -72,9 +75,10 @@ def view_questions(request):
         answer_ids = [q['answer_id'] for q in questions]
 
         if 'quiz_questions' not in request.session:
+            pg_array_str = list_to_pg_array(folder_id)
             all_questions = supabase.table('questions') \
                 .select('question_id') \
-                .eq('folder_id', folder_id) \
+                .filter("folder_id", "cs", pg_array_str)  \
                 .order('question_id', desc=False) \
                 .execute()
             request.session['quiz_questions'] = [q['question_id'] for q in all_questions.data]

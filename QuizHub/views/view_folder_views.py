@@ -11,7 +11,7 @@ def view_folder(request, folder_id):
     folder = folder_data[0]
 
     # 問題取得
-    questions_data = supabase.table("questions").select("*").eq("folder_id", folder_id).execute().data
+    questions_data = supabase.table("questions").select("*").filter("folder_id", "cs", f"{{{folder_id}}}").execute().data
 
     # ページネーション（1ページ10件）
     paginator = Paginator(questions_data, 10)
