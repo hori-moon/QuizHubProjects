@@ -42,8 +42,8 @@ def view_questions(request):
     questions = []
     answers_map = {}
     folder_id = None
-    result_message = None
-    answered_question_id = None
+    result_message = request.session.pop('result_message', None)
+    answered_question_id = request.session.pop('answered_question_id', None)
     prev_question_id = None
     next_question_id = None
 
@@ -126,13 +126,9 @@ def view_questions(request):
                         "folder_id": folder_id,
                     }).execute()
 
-                if index == len(quiz_list) - 1:
-                    del request.session['quiz_questions']
-                    del request.session['quiz_folder_id']
-                    return redirect('quiz_result')
-                else:
-                    next_index = index + 1
-                    return redirect(f"{request.path}?question_id={quiz_list[next_index]}")
+                request.session['result_message'] = result_message
+                request.session['answered_question_id'] = question['question_id']
+                return redirect(f"{request.path}?question_id={question['question_id']}")
 
     return render(request, 'view_questions.html', {
         'questions': questions,
@@ -144,12 +140,15 @@ def view_questions(request):
         'next_question_id': next_question_id,
     })
 
-
+@csrf_exempt
 @login_required
 def quiz_result(request):
     supabase_user_id = getattr(request.user, 'supabase_user_id', None)
     if not supabase_user_id:
         return redirect('login')
+
+    request.session.pop('quiz_questions', None)
+    request.session.pop('quiz_folder_id', None)
 
     response = supabase.table("answers_history") \
         .select("question_id, answered_contents, is_correct") \
