@@ -14,6 +14,7 @@
 
 {% block content %}
 <div class="button-group">
+    <!-- × ボタン：folder_id を引数としてURL逆引き -->
     <a href="{% url 'view_folder' folder_id %}" class="nav-button close-button">✕</a>
     <div class="spacer"></div>
 
@@ -22,14 +23,16 @@
         <button type="submit" class="nav-button close-button">終了</button>
     </form>
 
+    <!-- ＜ ボタン：question_id と folder_id の両方をクエリパラメータに -->
     {% if prev_question_id %}
-    <a href="?question_id={{ prev_question_id }}" class="nav-button prev-button">◁</a>
+    <a href="?question_id={{ prev_question_id }}&folder_id={{ folder_id }}" class="nav-button prev-button">◁</a>
     {% else %}
     <button class="nav-button prev-button" disabled>◁</button>
     {% endif %}
 
+    <!-- ＞ ボタン：同様に両方のパラメータを付与 -->
     {% if next_question_id %}
-    <a href="?question_id={{ next_question_id }}" class="nav-button next-button">▷</a>
+    <a href="?question_id={{ next_question_id }}&folder_id={{ folder_id }}" class="nav-button next-button">▷</a>
     {% else %}
     <button class="nav-button next-button" disabled>▷</button>
     {% endif %}
