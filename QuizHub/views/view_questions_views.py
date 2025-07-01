@@ -1,22 +1,20 @@
-from django.urls import reverse
-import random
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect
+from django.urls import reverse
 from ..services.supabase_client import supabase
 from datetime import datetime
+import random
 import pytz
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth import get_user_model
-
-User = get_user_model()
 
 def list_to_pg_array(lst):
     return "{" + ",".join(str(x) for x in lst) + "}"
 
 def start_random_quiz(request):
     if request.method == 'POST':
-        folder_id = request.POST.get('folder_id')
-        pg_array_str = list_to_pg_array(folder_id)
+        folder_id = int(request.POST.get('folder_id'))  # 文字列から整数へ変換
+        pg_array_str = list_to_pg_array([folder_id])    # 配列として変換
         num_questions = int(request.POST.get('num_questions', 0))
 
         all_questions = supabase.table('questions') \
@@ -28,31 +26,39 @@ def start_random_quiz(request):
         random_ids = random.sample(all_ids, min(num_questions, len(all_ids)))
 
         request.session['quiz_questions'] = random_ids
-        request.session['quiz_folder_id'] = folder_id
+        request.session['quiz_folder_id'] = folder_id  # 整数として保存
 
         return redirect(f"{reverse('view_questions')}?question_id={random_ids[0]}")
     return redirect('view_folder')
 
-
 @csrf_exempt
 @login_required
 def view_questions(request):
-    question_id = request.GET.get('question_id') or request.POST.get('question_id')
+    question_id_raw = request.GET.get('question_id') or request.POST.get('question_id')
 
     questions = []
     answers_map = {}
-    folder_id = None
     result_message = request.session.pop('result_message', None)
     answered_question_id = request.session.pop('answered_question_id', None)
     prev_question_id = None
     next_question_id = None
 
-    if not question_id:
-        question_list = request.session.get("quiz_questions")
-        folder_id = request.session.get("quiz_folder_id")
+    # quiz_questions, folder_id をセッションから取得
+    question_list = request.session.get("quiz_questions")
+    folder_id = request.GET.get("folder_id") or request.session.get("quiz_folder_id")
 
-        if not question_list or not folder_id:
-            return redirect("view_folder", folder_id=folder_id or 0)
+    # folder_id の正規化（list型やNoneに対応）
+    if folder_id is None:
+        folder_id_value = 0
+    elif isinstance(folder_id, list):
+        folder_id_value = folder_id[0]
+    else:
+        folder_id_value = folder_id
+
+    # question_id がない場合：セッションから取得するルート
+    if not question_id_raw:
+        if not question_list or folder_id is None:
+            return redirect("view_folder", folder_id=folder_id_value)
 
         index = int(request.GET.get("index", 0))
         if index >= len(question_list):
@@ -60,43 +66,52 @@ def view_questions(request):
 
         question_id = question_list[index]
     else:
-        folder_id = request.GET.get("folder_id") or request.session.get("quiz_folder_id")
+        # ここで型変換＆バリデーション
+        try:
+            question_id = int(question_id_raw)
+        except (TypeError, ValueError):
+            return redirect("view_folder", folder_id=folder_id_value)
 
+    # 該当の質問を取得
     response = supabase.table('questions') \
         .select('question_id, content, folder_id, answer_id') \
-        .eq('question_id', int(question_id)).execute()
+        .eq('question_id', question_id).execute()
     questions = response.data if response.data else []
 
     if questions:
         question = questions[0]
-        folder_id = question['folder_id']
-        request.session['quiz_folder_id'] = folder_id
+        question_folder_ids = question.get('folder_id', [])
+        request.session['quiz_folder_id'] = folder_id_value  # 使用中フォルダを再保存
 
         answer_ids = [q['answer_id'] for q in questions]
 
-        if 'quiz_questions' not in request.session:
-            pg_array_str = list_to_pg_array(folder_id)
+        # クイズリストがセッションにない場合は取得
+        if not question_list:
+            pg_array_str = list_to_pg_array([int(folder_id_value)])
             all_questions = supabase.table('questions') \
                 .select('question_id') \
                 .filter("folder_id", "cs", pg_array_str)  \
                 .order('question_id', desc=False) \
                 .execute()
-            request.session['quiz_questions'] = [q['question_id'] for q in all_questions.data]
+            question_list = [q['question_id'] for q in all_questions.data]
+            request.session['quiz_questions'] = question_list
 
-        quiz_list = request.session['quiz_questions']
-        index = quiz_list.index(int(question_id))
+        # 前後のナビゲーションID
+        if question_id in question_list:
+            index = question_list.index(question_id)
+            if index > 0:
+                prev_question_id = question_list[index - 1]
+            if index < len(question_list) - 1:
+                next_question_id = question_list[index + 1]
 
-        if index > 0:
-            prev_question_id = quiz_list[index - 1]
-        if index < len(quiz_list) - 1:
-            next_question_id = quiz_list[index + 1]
-
+        # 解答を取得
         answer_response = supabase.table('answers') \
             .select('answer_id, correct, options') \
             .in_('answer_id', answer_ids).execute()
         answers = answer_response.data if answer_response.data else []
         answers_map = {a['answer_id']: a for a in answers}
 
+        # POST時の判定処理
         if request.method == 'POST':
             answer = answers_map.get(question['answer_id'])
             if answer:
@@ -115,6 +130,7 @@ def view_questions(request):
                 result_message = "正解です！" if is_correct else "不正解です。"
                 answered_question_id = question['question_id']
 
+                # 履歴記録
                 supabase_user_id = getattr(request.user, 'supabase_user_id', None)
                 if supabase_user_id:
                     supabase.table("answers_history").insert({
@@ -123,7 +139,7 @@ def view_questions(request):
                         "answered_contents": user_answers,
                         "is_correct": is_correct,
                         "answered_at": datetime.now(pytz.UTC).isoformat(),
-                        "folder_id": folder_id,
+                        "folder_id": folder_id_value,
                     }).execute()
 
                 request.session['result_message'] = result_message
@@ -133,12 +149,13 @@ def view_questions(request):
     return render(request, 'view_questions.html', {
         'questions': questions,
         'answers_map': answers_map,
-        'folder_id': folder_id,
+        'folder_id': folder_id_value,
         'result_message': result_message,
         'answered_question_id': str(answered_question_id) if answered_question_id else None,
         'prev_question_id': prev_question_id,
         'next_question_id': next_question_id,
     })
+
 
 @csrf_exempt
 @login_required
