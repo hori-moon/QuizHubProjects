@@ -35,7 +35,7 @@
             {% for question in questions %}
             <tr>
                 <td>
-                    <a href="{% url 'view_questions' %}?question_id={{ question.question_id }}" class="folder-item">
+                    <a href="{% url 'view_questions' %}?question_id={{ question.question_id }}&folder_id={{ folder.folder_id }}" class="folder-item">
                         <div class="folder-name">
                             {{ question.content|slice:":20" }}{% if question.content|length > 20 %}...{% endif %}
                         </div>
