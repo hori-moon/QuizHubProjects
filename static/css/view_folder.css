@@ -69,3 +69,16 @@ th {
     font-size: 1.2em;
     font-weight: bold;
 }
+
+.center-box button {
+    background-color: #3f51b5;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    height: fit-content; /* テキストエリアの高さに合わせない */
+}
+
+.center-box button:hover {
+    background-color: #303f9f;
+}
