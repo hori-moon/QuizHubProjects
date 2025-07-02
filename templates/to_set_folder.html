@@ -32,12 +32,13 @@
                 {% endfor %}
             </ul>
             {% else %}
-            <p>フォルダーが見つかりません。</p>
+            <p>あなたが作成したフォルダーが見つかりませんでした。</p>
             {% endif %}
 
         </div>
         <div class="question-section">
             <h2>問題一覧（降順）</h2>
+            {% if questions %}
             <ul class="question-list">
                 {% for question in questions %}
                 <li>
@@ -48,6 +49,9 @@
                 </li>
                 {% endfor %}
             </ul>
+            {% else %}
+            <p>あなたが作成した問題が見つかりませんでした。</p>
+            {% endif %}
             <button type="submit" name="insert-question">選択した問題をフォルダーに追加</button>
         </div>
     </div>

@@ -55,7 +55,7 @@
     width: 200px;
 }
 
-#create-folder-btn,
+.folder-section button,
 .question-section button {
     padding: 8px 12px;
     border: none;
@@ -65,7 +65,7 @@
     cursor: pointer;
 }
 
-#create-folder-btn:hover,
+.folder-section button:hover,
 .question-section button:hover {
     background-color: #303f9f;
 }

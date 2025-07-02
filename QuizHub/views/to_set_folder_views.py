@@ -74,8 +74,6 @@ def to_set_folder(request):
 
 
     # GET時の初期表示
-    folder_data = supabase.table("question_folders").select("*").order("folder_id", desc=True).execute().data
-
     uuid_pattern = r"^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
     if request.user.is_authenticated:
         user_id = getattr(request.user, 'supabase_user_id')
@@ -85,6 +83,7 @@ def to_set_folder(request):
         else:
             user_id = str(user_id)
 
+    folder_data = supabase.table("question_folders").select("*").eq("user_id", user_id).order("folder_id", desc=True).execute().data
     questions_data = supabase.table("questions").select("*").eq("user_id", user_id).order("question_id", desc=True).execute().data
 
     return render(request, 'to_set_folder.html', {
