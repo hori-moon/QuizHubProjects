@@ -49,7 +49,7 @@ document.addEventListener("DOMContentLoaded", function () {
         container.innerHTML = `<label for="answer_${questionIndex}">解答:</label><br>`;
 
         // 選択肢ありの場合（テキストまたは画像）
-        if (type === "text" || type === "image") {
+        if (type === "text") {
             const input = document.createElement("input");
             input.type = "text";
             input.id = `answer_${questionIndex}`;
@@ -86,7 +86,6 @@ document.addEventListener("DOMContentLoaded", function () {
     for (let i = 1; i <= totalQuestions; i++) {
         const radios = document.querySelectorAll(`input[name="choice_type_${i}"]`);
         const textGroup = document.getElementById(`text_choices_group_${i}`);
-        const imageGroup = document.getElementById(`image_choices_group_${i}`);
 
         // ラジオボタンの変更に応じて入力欄切り替え
         radios.forEach(rb => {
@@ -98,9 +97,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (value === "text") {
                     textGroup.style.display = "block";
                     imageGroup.style.display = "none";
-                } else if (value === "image") {
-                    textGroup.style.display = "none";
-                    imageGroup.style.display = "block";
                 } else {
                     textGroup.style.display = "none";
                     imageGroup.style.display = "none";
@@ -140,14 +136,6 @@ document.addEventListener("DOMContentLoaded", function () {
                     textarea.addEventListener("input", validateForm);
                     wrapper.appendChild(label);
                     wrapper.appendChild(textarea);
-                } else {
-                    const input = document.createElement("input");
-                    input.type = "file";
-                    input.name = `image_choices_${i}`;
-                    input.accept = "image/*";
-                    input.addEventListener("change", validateForm);
-                    wrapper.appendChild(label);
-                    wrapper.appendChild(input);
                 }
 
                 container.appendChild(wrapper);
@@ -159,12 +147,6 @@ document.addEventListener("DOMContentLoaded", function () {
         if (textInput) {
             textInput.addEventListener("input", () => renderChoices("text"));
             renderChoices("text");
-        }
-
-        const imageInput = document.getElementById(`image_num_choices_${i}`);
-        if (imageInput) {
-            imageInput.addEventListener("input", () => renderChoices("image"));
-            renderChoices("image");
         }
     }
 
@@ -194,14 +176,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (textGroup && textGroup.style.display !== "none") {
                     choices.forEach(choice => {
                         if (choice.value.trim() === "") allValid = false;
-                    });
-                }
-            } else if (choiceType === "image") {
-                const choices = document.querySelectorAll(`#dynamic_image_choices_${i} input[type="file"]`);
-                const imageGroup = document.getElementById(`image_choices_group_${i}`);
-                if (imageGroup && imageGroup.style.display !== "none") {
-                    choices.forEach(choice => {
-                        if (!choice.files || choice.files.length === 0) allValid = false;
                     });
                 }
             }

@@ -4,14 +4,15 @@
     display: flex;
 }
 
-.main-left{
+.main-left {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     width: 50%;
 }
-.main-right{
+
+.main-right {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -20,24 +21,34 @@
 }
 
 #quiz-slider-container {
-        display: flex;
-        align-items: center;
-        margin-bottom: 1em;
-    }
+    display: flex;
+    align-items: center;
+    margin-bottom: 1em;
+}
 
-    .slider-nav {
-        font-size: 2em;
-        background: none;
-        border: none;
-        cursor: pointer;
-        width: 2em;
-        height: 2em;
-    }
+.slider-nav {
+    font-size: 2em;
+    background: none;
+    border: none;
+    cursor: pointer;
+    width: 2em;
+    height: 2em;
+}
 
-    #quiz-slider {
-        flex: 1;
-    }
+#quiz-slider {
+    flex: 1;
+}
 
-    .quiz-slide {
-        transition: all 0.3s;
-    }
+.quiz-slide {
+    transition: all 0.3s;
+}
+
+#submit-quiz-btn{
+    font-size: 1rem;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    cursor: pointer;
+    height: fit-content; /* テキストエリアの高さに合わせない */
+    padding: 10px 20px;
+}

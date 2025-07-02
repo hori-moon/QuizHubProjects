@@ -53,20 +53,6 @@ def to_set_quiz(request):
                 num_choices = int(request.POST.get(f"text_num_choices_{i}", 0))
                 options = request.POST.getlist(f"choices_{i}")  # 同名textareaの複数選択肢をリストで取得
 
-            elif choice_type == "image":
-                # 画像選択肢の場合、選択肢数を取得
-                num_choices = int(request.POST.get(f"image_num_choices_{i}", 0))
-                # ファイルはrequest.FILESで複数アップロードされたものを取得
-                for j in range(num_choices):
-                    image = request.FILES.getlist(f"image_choices_{i}")[j]  # 同名inputからj番目のファイルを取得
-                    if image:
-                        # supabaseストレージの 'quiz_images' バケットにアップロード
-                        file_path = f"quiz_images/{image.name}"
-                        supabase.storage.from_("quiz_images").upload(file_path, image)
-                        # 公開URLを取得して選択肢リストに追加
-                        public_url = supabase.storage.from_("quiz_images").get_public_url(file_path)
-                        options.append(public_url)
-
             # answer_textは「1,3」のような選択肢番号の文字列か、記述式回答の文字列
             # supabaseのanswersテーブルに挿入するデータ構造を作成
             answer_data = {
