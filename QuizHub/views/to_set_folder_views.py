@@ -11,15 +11,15 @@ def to_set_folder(request):
 
         # 空欄チェック
         if folder_name:
-            user_id = request.POST.get("user_id", "") or "11111111-1111-1111-1111-111111111111"
-
-            # UUID形式チェック
-            uuid_pattern = r"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
-            if not re.match(uuid_pattern, user_id):
-                user_id = "11111111-1111-1111-1111-111111111111"
-            else:
-                user_id = str(user_id)
-            print(f"Using user_id: {user_id}")
+            uuid_pattern = r"^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
+            if request.user.is_authenticated:
+                user_id = getattr(request.user, 'supabase_user_id')
+                print("user_id:", user_id)
+                if not re.match(uuid_pattern, str(user_id)):
+                    user_id = "11111111-1111-1111-1111-111111111111"
+                else:
+                    user_id = str(user_id)
+            print("Validated user_id:", user_id)
 
             print(f"Creating folder with name: {folder_name} for user_id: {user_id}")
             # Supabaseにフォルダー挿入
@@ -76,12 +76,14 @@ def to_set_folder(request):
     # GET時の初期表示
     folder_data = supabase.table("question_folders").select("*").order("folder_id", desc=True).execute().data
 
-    user_id = request.POST.get("user_id", "") or "11111111-1111-1111-1111-111111111111"
-    uuid_pattern = r"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
-    if not re.match(uuid_pattern, user_id):
-        user_id = "11111111-1111-1111-1111-111111111111"
-    else:
-        user_id = str(user_id)
+    uuid_pattern = r"^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
+    if request.user.is_authenticated:
+        user_id = getattr(request.user, 'supabase_user_id')
+        print("user_id:", user_id)
+        if not re.match(uuid_pattern, str(user_id)):
+            user_id = "11111111-1111-1111-1111-111111111111"
+        else:
+            user_id = str(user_id)
 
     questions_data = supabase.table("questions").select("*").eq("user_id", user_id).order("question_id", desc=True).execute().data
 

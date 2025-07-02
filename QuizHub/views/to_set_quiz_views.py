@@ -12,12 +12,15 @@ def to_set_quiz(request):
     if request.method == "POST":
         print("POST request received in to_set_quiz")
         # user_idをPOSTから取得し、形式を検証
-        user_id = request.POST.get("user_id", "")
         uuid_pattern = r"^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
-        if not re.match(uuid_pattern, user_id):
-            user_id = "11111111-1111-1111-1111-111111111111"
-        else:
-            user_id = str(user_id)
+        if request.user.is_authenticated:
+            user_id = getattr(request.user, 'supabase_user_id')
+            print("user_id:", user_id)
+            if not re.match(uuid_pattern, str(user_id)):
+                user_id = "11111111-1111-1111-1111-111111111111"
+            else:
+                user_id = str(user_id)
+        print("Validated user_id:", user_id)
 
         # OCR結果と問題数が送信されてきた場合（問題設定の初期表示）
         question_num = request.POST.get("question_num")
