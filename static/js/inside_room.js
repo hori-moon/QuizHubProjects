@@ -43,8 +43,17 @@ function showToast(message = "Copied!") {
   }, 2000);
 }
 
-function showAddFolderPrompt() {
+function openAddFolderModal() {
+  document.getElementById("add-folder-modal").style.display = "block";
 }
+
+function closeAddFolderModal() {
+  document.getElementById("add-folder-modal").style.display = "none";
+}
+
+function showAddFolderOptions(folderId) {
+}
+
 
 function showDeleteOptions(folderId) {
 }

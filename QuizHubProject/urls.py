@@ -35,5 +35,7 @@ urlpatterns = [
     path('login/', views.login_view, name='login'),
     path('logout/', views.logout_view, name='logout'),
     path("ocr/", views.ocr_image, name="ocr_image"),
-    path('admin/', admin.site.urls),
+    path('get_user_folders/', views.get_user_folders, name='get_user_folders'),
+    path('connect_folder_to_room/', views.connect_folder_to_room, name='connect_folder_to_room'),
+
 ]

@@ -17,13 +17,39 @@
 
     <!-- 左カラム（メイン） -->
     <div class="main-content">
-        <table>
+        <table class="folder-table">
             <tr>
                 <th>フォルダー一覧</th>
                 <th>
-                    <button class="add-folder-btn" onclick="showAddFolderPrompt()">+</button>
+                    <button class="add-folders-list-btn" onclick="openAddFolderModal()">+</button>
+                    <!-- モーダル表示エリア -->
+                    <div id="add-folder-modal" class="modal" style="display: none;">
+                        <table class="modal-content">
+                            <tr>
+                                <th class="modal-header">
+                                    <h4>追加フォルダー</h4>
+                                </th>
+                                <th class="modal-header-close">
+                                    <button class="close-modal-btn" onclick="closeAddFolderModal()">×</button>
+                                </th>
+                            </tr>
+                            {% if addable_folders %}
+                            {% for folders in addable_folders %}
+                            <tr>
+                                <td>
+                                    {{ folders.folder_name }}
+                                    <button class="add-folder-btn" onclick="showAddFolderOptions('{{ folder.folder_id }}')">追加</button>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                            {% else %}
+                            <tr><td>
+                                <h6>追加可能なフォルダーはありません。</h6>
+                            </td></tr>
+                            {% endif %}
+                        </table>
+                    </div>
                 </th>
-
             </tr>
             {% if folders %}
             {% for folder in folders %}

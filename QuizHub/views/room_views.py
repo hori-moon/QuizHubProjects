@@ -1,7 +1,9 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
+from django.http import JsonResponse
 from ..services.supabase_client import supabase
 from supabase import create_client
+import json, re
 
 # ルーム参加
 def join_room(request):
@@ -34,34 +36,7 @@ def join_room(request):
 
     return render(request, 'join_room.html')
 
-def inside_room(request):
-    room_id = request.session.get('room_id')
-    room_name = request.session.get('room_name')
-    room_password = request.session.get('room_password')
-
-    if not room_id:
-        return redirect('join_room')
-
-    # ルームに紐づくフォルダー一覧を取得
-    # room_folders テーブルを使って関連 folder_id を取得し、question_folders から名前を取る
-    room_folders = supabase.table("room_folders").select("*").eq("room_id", room_id).execute().data
-
-    folder_ids = [rf["folder_id"] for rf in room_folders]
-
-    folders = []
-    if folder_ids:
-        folders_response = supabase.table("question_folders").select("*").in_("folder_id", folder_ids).execute()
-        folders = folders_response.data
-
-    return render(request, 'inside_room.html', {
-        'room_name': room_name,
-        'room_password': room_password,
-        'folders': folders,
-    })
-
 # ルーム退出
-from django.contrib import messages  # メッセージ機能を使うためにインポート
-
 def leave_room(request):
     # セッションからルーム関連情報を削除
     request.session.pop('room_name', None)
@@ -69,3 +44,74 @@ def leave_room(request):
 
     messages.info(request, "ルームを退出しました。")
     return redirect('join_room')
+
+# ルーム内の処理
+def inside_room(request):
+    room_id = request.session.get('room_id')
+    room_name = request.session.get('room_name')
+    room_password = request.session.get('room_password')
+    user_id = getattr(request.user, 'supabase_user_id')
+
+    if not room_id:
+        return redirect('join_room')
+
+    # ルームに紐づくフォルダー一覧を取得
+    room_folders = supabase.table("room_folders").select("*").eq("room_id", room_id).execute().data
+    folder_ids = [rf["folder_id"] for rf in room_folders]
+
+    folders = []
+    if folder_ids:
+        folders_response = supabase.table("question_folders").select("*").in_("folder_id", folder_ids).execute()
+        folders = folders_response.data
+
+    # 自作のフォルダー一覧
+    my_folders = supabase.table("question_folders").select("*").eq("user_id", user_id).execute().data
+
+    # ルーム未接続のものだけを抽出
+    addable_folders = [f for f in my_folders if f["folder_id"] not in folder_ids]
+
+    return render(request, 'inside_room.html', {
+        'room_name': room_name,
+        'room_password': room_password,
+        'folders': folders,
+        'addable_folders': addable_folders,
+    })
+
+def get_user_folders(request):
+    user_id = getattr(request.user, 'supabase_user_id')
+    room_id = request.session.get('room_id')
+
+    if not user_id or not room_id:
+        return JsonResponse({'folders': []})
+
+    # 全自作フォルダー取得
+    all_folders = supabase.table("question_folders").select("*").eq("user_id", user_id).execute().data
+    for folder in all_folders:
+        print(f"Folder ID: {folder['folder_id']}")
+
+    # すでにルームに追加済みのfolder_id取得
+    room_folder_ids = supabase.table("room_folders").select("folder_id").eq("room_id", room_id).execute().data
+    for rf in room_folder_ids:
+        print(f"Room Folder ID: {rf['folder_id']}")
+    added_folder_ids = {rf["folder_id"] for rf in room_folder_ids}
+    print(f"Added Folder IDs: {added_folder_ids}")
+
+    # 未追加のものだけ抽出
+    available_folders = [f for f in all_folders if f["folder_id"] not in added_folder_ids]
+    print(f"Available Folders: {available_folders}")
+
+    return JsonResponse({'folders': available_folders})
+
+def connect_folder_to_room(request):
+    if request.method == 'POST':
+        body = json.loads(request.body)
+        folder_id = body.get('folder_id')
+        room_id = request.session.get('room_id')
+
+        if folder_id and room_id:
+            supabase.table("room_folders").insert({
+                "folder_id": folder_id,
+                "room_id": room_id
+            }).execute()
+            return JsonResponse({'status': 'ok'})
+    return JsonResponse({'status': 'error'}, status=400)
