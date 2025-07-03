@@ -27,7 +27,7 @@
             <form method="POST" action="{% url 'create_account' %}">
                 {% csrf_token %}
                 <br>
-                <input type="text" id="user_name" name="user_name" placeholder="name" required>
+                <input type="text" id="user_name" name="user_name" placeholder="name" maxlength="15" required>
                 </br>
                 <input type="password" id="user_password" name="user_password" placeholder="password" required>
                 <div class="button-wrapper">
