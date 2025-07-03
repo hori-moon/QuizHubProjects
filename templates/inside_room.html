@@ -20,22 +20,29 @@
         <table>
             <tr>
                 <th>フォルダー一覧</th>
+                <th>
+                    <button class="add-folder-btn" onclick="showAddFolderPrompt()">+</button>
+                </th>
+
             </tr>
+            {% if folders %}
+            {% for folder in folders %}
             <tr>
-                <td>
-                    {% if folders %}
-                    <div class="folder-style-list">
-                        {% for folder in folders %}
-                        <a href="{% url 'view_folder' folder.folder_id %}" class="folder-item">
-                            <div class="folder-name">{{ folder.folder_name }}</div>
-                        </a>
-                        {% endfor %}
-                    </div>
-                    {% else %}
-                    <p>フォルダーがありません。</p>
-                    {% endif %}
+                <td class="folder-cell">
+                    <a href="{% url 'view_folder' folder.folder_id %}" class="folder-item">
+                        <div class="folder-name">{{ folder.folder_name }}</div>
+                    </a>
+                </td>
+                <td class="action-cell">
+                    <button class="delete-folder-btn" onclick="showDeleteOptions('{{ folder.folder_id }}')">削除</button>
                 </td>
             </tr>
+            {% endfor %}
+            {% else %}
+            <tr>
+                <td colspan="2" class="no-folders">フォルダーがありません。フォルダーを作成してください。</td>
+            </tr>
+            {% endif %}
         </table>
     </div>
 

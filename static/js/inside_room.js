@@ -42,3 +42,10 @@ function showToast(message = "Copied!") {
     toast.classList.remove("show");
   }, 2000);
 }
+
+function showAddFolderPrompt() {
+}
+
+function showDeleteOptions(folderId) {
+}
+
