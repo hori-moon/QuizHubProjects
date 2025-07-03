@@ -31,6 +31,9 @@
     <header class="header">
         <button class="toggle-btn" onclick="toggleSidebar()">☰</button>
         <h1 class="logo">QuizHub</h1>
+        {% if request.user.is_authenticated %}
+        <p class="hello-name">ようこそ、{{ request.user.username }} さん</p>
+        {% endif %}
     </header>
 
     <!-- サイドバー -->

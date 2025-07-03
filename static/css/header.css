@@ -26,3 +26,10 @@
     font-size: 24px;
     font-weight: bold;
 }
+
+/* ユーザー名の表示 */
+.hello-name {
+    margin-left: auto; /* ユーザー名を右端に配置 */
+    margin-right: 30    px;
+    font-size: 16px;
+}
