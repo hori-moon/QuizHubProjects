@@ -1,10 +1,9 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_protect
 from ..services.supabase_client import supabase
 from supabase import create_client
-import json, re
-
 # ルーム参加
 def join_room(request):
     if request.method == 'POST':
@@ -102,16 +101,40 @@ def get_user_folders(request):
 
     return JsonResponse({'folders': available_folders})
 
+@csrf_protect
 def connect_folder_to_room(request):
     if request.method == 'POST':
-        body = json.loads(request.body)
-        folder_id = body.get('folder_id')
+        folder_id = request.POST.get('folder_id')
         room_id = request.session.get('room_id')
+        print(f"Connecting Folder ID: {folder_id} to Room ID: {room_id}")
 
         if folder_id and room_id:
             supabase.table("room_folders").insert({
-                "folder_id": folder_id,
-                "room_id": room_id
+                "folder_id": int(folder_id),
+                "room_id": int(room_id)
             }).execute()
-            return JsonResponse({'status': 'ok'})
-    return JsonResponse({'status': 'error'}, status=400)
+
+            messages.success(request, "フォルダーをルームに追加しました。")
+        else:
+            messages.error(request, "フォルダーの追加に失敗しました。")
+
+    return redirect('inside_room')
+
+@csrf_protect
+def disconnect_folder_from_room(request):
+    if request.method == 'POST':
+        folder_id = request.POST.get('folder_id')
+        room_id = request.session.get('room_id')
+
+        if folder_id and room_id:
+            # folder_id と room_id の一致で削除
+            supabase.table("room_folders").delete().match({
+                "folder_id": int(folder_id),
+                "room_id": int(room_id)
+            }).execute()
+
+            messages.success(request, "フォルダーの接続を解除しました。")
+        else:
+            messages.error(request, "フォルダーの解除に失敗しました。")
+
+    return redirect('inside_room')

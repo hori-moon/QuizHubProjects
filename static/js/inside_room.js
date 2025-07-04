@@ -51,10 +51,6 @@ function closeAddFolderModal() {
   document.getElementById("add-folder-modal").style.display = "none";
 }
 
-function showAddFolderOptions(folderId) {
-}
-
-
 function showDeleteOptions(folderId) {
 }
 
