@@ -14,28 +14,14 @@
 
 {% block content %}
 <div class="button-group">
-    <!-- × ボタン：folder_id を引数としてURL逆引き -->
+    <!-- × ボタン -->
     <a href="{% url 'view_folder' folder_id %}" class="nav-button close-button">✕</a>
     <div class="spacer"></div>
 
     <form method="post" action="{% url 'quiz_result' %}" style="display:inline;">
         {% csrf_token %}
-        <button type="submit" class="nav-button close-button">終了</button>
+        <button type="submit" class="result-display">結果表示</button>
     </form>
-
-    <!-- ＜ ボタン：question_id と folder_id の両方をクエリパラメータに -->
-    {% if prev_question_id %}
-    <a href="?question_id={{ prev_question_id }}&folder_id={{ folder_id }}" class="nav-button prev-button">◁</a>
-    {% else %}
-    <button class="nav-button prev-button" disabled>◁</button>
-    {% endif %}
-
-    <!-- ＞ ボタン：同様に両方のパラメータを付与 -->
-    {% if next_question_id %}
-    <a href="?question_id={{ next_question_id }}&folder_id={{ folder_id }}" class="nav-button next-button">▷</a>
-    {% else %}
-    <button class="nav-button next-button" disabled>▷</button>
-    {% endif %}
 </div>
 
 {% for question in questions %}
@@ -46,14 +32,39 @@
 <div class="answer-box">
     {% with answers_map|dict_get:question.answer_id as answer %}
     {% if answer %}
+
+    {% if answered_question_id == question.question_id|stringformat:"s" %}
+    <!-- 解答後の表示 -->
+
+    <p class="correct-answer">
+        正解：
+        {% for c in answer.correct %}
+        {{ c }}{% if not forloop.last %}, {% endif %}
+        {% endfor %}
+    </p>
+
+    {% if result_message %}
+    <p class="result-message">{{ result_message }}</p>
+    {% endif %}
+
+    {% if next_question_id %}
+    <form method="get" action="{% url 'view_questions' %}">
+        <input type="hidden" name="question_id" value="{{ next_question_id }}">
+        <input type="hidden" name="folder_id" value="{{ folder_id }}">
+        <button type="submit" class="button">次の問題へ</button>
+    </form>
+    {% endif %}
+
+    {% else %}
+
+    <!-- 解答前のフォーム表示 -->
     <form method="post">
         {% csrf_token %}
         <input type="hidden" name="question_id" value="{{ question.question_id }}">
 
-        {% if not answered_question_id or answered_question_id != question.question_id|stringformat:"s" %}
         {% if answer.options and answer.options|length > 0 %}
         {% if answer.correct|length > 1 %}
-        <!-- 複数正解 → チェックボックス -->
+        <!-- 複数正解（チェックボックス） -->
         {% for option in answer.options %}
         <label>
             <input type="checkbox" name="answer" value="{{ forloop.counter }}">
@@ -61,7 +72,7 @@
         </label><br>
         {% endfor %}
         {% else %}
-        <!-- 単一正解 → ラジオボタン -->
+        <!-- 単一正解（ラジオボタン） -->
         {% for option in answer.options %}
         <label>
             <input type="radio" name="answer" value="{{ forloop.counter }}">
@@ -73,18 +84,11 @@
         <!-- テキスト入力 -->
         <input type="text" name="answer" class="answer-textbox" placeholder="解答を入力">
         {% endif %}
-        <button type="submit" class="answer-button">解答する</button>
-        {% else %}
-        <!-- 解答後の表示 -->
-        <p class="correct-answer">
-            正解：
-            {% for c in answer.correct %}
-            {{ c }}{% if not forloop.last %}, {% endif %}
-            {% endfor %}
-        </p>
-        <p class="result-message">{{ result_message }}</p>
-        {% endif %}
+
+        <button type="submit" class="button">解答する</button>
     </form>
+    {% endif %}
+
     {% else %}
     <p>解答情報が見つかりません。</p>
     {% endif %}

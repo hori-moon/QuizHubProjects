@@ -63,7 +63,7 @@
     color: #999;
 }
 
-.answer-button {
+.button {
     padding: 8px 12px;
     border: none;
     background-color: #3f51b5;
@@ -72,6 +72,22 @@
     cursor: pointer;
 }
 
-.answer-button:hover {
+.button:hover {
     background-color: #303f9f;
+}
+
+.result-display {
+    color: #555;
+    font-size: 20px;
+    margin-right: 10px;
+    padding: 4px 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #ffffff;
+    color: #555;
+    cursor: pointer;
+}
+
+.result-display:hover {
+    background-color: #f0f0f0;
 }
