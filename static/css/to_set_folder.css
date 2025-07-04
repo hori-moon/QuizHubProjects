@@ -3,7 +3,7 @@
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    gap: 40px; /* 左右の余白 */
+    gap: 40px;
     margin: 40px auto;
     max-width: 1200px;
     padding: 0 20px;
@@ -22,7 +22,7 @@
     background-color: #ccc;
 }
 
-/* 左右カラムの共通スタイル */
+/* 左右カラム */
 .folder-section,
 .question-section {
     flex: 1;
@@ -33,28 +33,25 @@
     background-color: #f9f9f9;
 }
 
-/* リスト関係 */
-.folder-list,
-.question-list {
-    list-style: none;
-    padding-left: 0;
+.folder-table {
+    width: 100%;
+    border-collapse: collapse;
 }
 
-.folder-list li,
-.question-list li {
-    margin: 10px 0;
-    font-size: 16px;
-}
-
-/* フォルダー名入力・ボタン */
+/* 新しいフォルダー名入力欄 */
 #new-folder-name {
     padding: 8px;
-    margin-right: 10px;
     border: 1px solid #aaa;
     border-radius: 5px;
-    width: 200px;
+    width: 90%;
 }
 
+.folder-name-cell {
+    margin-right: 10px;
+    width: 80%;
+}
+
+/* ボタン共通スタイル */
 .folder-section button,
 .question-section button {
     padding: 8px 12px;
@@ -68,4 +65,15 @@
 .folder-section button:hover,
 .question-section button:hover {
     background-color: #303f9f;
+}
+
+/* 質問リスト（ul） */
+.question-list {
+    list-style: none;
+    padding-left: 0;
+}
+
+.question-list li {
+    margin: 10px 0;
+    font-size: 16px;
 }

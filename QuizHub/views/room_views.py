@@ -114,10 +114,6 @@ def connect_folder_to_room(request):
                 "room_id": int(room_id)
             }).execute()
 
-            messages.success(request, "フォルダーをルームに追加しました。")
-        else:
-            messages.error(request, "フォルダーの追加に失敗しました。")
-
     return redirect('inside_room')
 
 @csrf_protect
@@ -132,9 +128,5 @@ def disconnect_folder_from_room(request):
                 "folder_id": int(folder_id),
                 "room_id": int(room_id)
             }).execute()
-
-            messages.success(request, "フォルダーの接続を解除しました。")
-        else:
-            messages.error(request, "フォルダーの解除に失敗しました。")
 
     return redirect('inside_room')

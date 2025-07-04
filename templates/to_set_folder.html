@@ -13,25 +13,48 @@
 
 {% block content %}
 <form method="post">
-<div class="main-container">
+    <div class="main-container">
         <div class="folder-section">
-            <h2>新しいフォルダーを作成</h2>
-            {% csrf_token %}
-            <input type="text" id="new-folder-name" name="new-folder-name" placeholder="新しいフォルダー名"
-                maxlength="30">
-            <button type="submit" name="create-folder" value="1">作成</button>
-            <h2>既存のフォルダーに追加</h2>
-            {% if folders %}
-            <ul class="folder-list">
+            <table class="folder-table">
+                <tr>
+                    <td colspan="2">
+                        <h2>新しいフォルダーを作成</h2>
+                    </td>
+                </tr>
+                {% csrf_token %}
+                <tr>
+                    <td class="folder-name-cell">
+                        <input type="text" id="new-folder-name" name="new-folder-name" placeholder="新しいフォルダー名"
+                            maxlength="30">
+                    </td>
+                    <td>
+                        <button type="submit" name="create-folder" value="1">作成</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <h2>既存のフォルダーに追加</h2>
+                    </td>
+                </tr>
+                {% if folders %}
                 {% for folder in folders %}
-                <li>
-                    <label>
-                        <input type="radio" name="selected-folder" value="{{ folder.folder_id }}">
-                        {{ folder.folder_name }}
-                    </label>
-                </li>
+                <tr>
+                    <td class="folder-name-cell">
+                        <label>
+                            <input type="radio" name="selected-folder" value="{{ folder.folder_id }}">
+                            {{ folder.folder_name |slice:":20" }}{% if folder.folder_name|length > 20 %}...{% endif %}
+                        </label>
+                    </td>
+                    <td>
+                        <form method="post" action="{% url 'delete_folder' %}" style="display:inline;">
+                            {% csrf_token %}
+                            <input type="hidden" name="folder_id" value="{{ folder.folder_id }}">
+                            <button type="submit" class="delete-button">削除</button>
+                        </form>
+                    </td>
+                </tr>
                 {% endfor %}
-            </ul>
+            </table>
             {% else %}
             <p>あなたが作成したフォルダーが見つかりませんでした。</p>
             {% endif %}
@@ -45,7 +68,7 @@
                 <li>
                     <label>
                         <input type="checkbox" name="question-ids" value="{{ question.question_id }}">
-                        {{ question.content|default:"問題なし" }}
+                        {{ question.content|slice:":20" }}{% if question.content|length > 20 %}...{% endif %}
                     </label>
                 </li>
                 {% endfor %}

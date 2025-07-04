@@ -91,3 +91,38 @@ def to_set_folder(request):
         'questions': questions_data,
         'user_id': user_id,
     })
+
+def delete_folder(request):
+    if request.method == "POST":
+        folder_id = request.POST.get("folder_id")
+        if not folder_id:
+            raise Http404("フォルダーIDが提供されていません。")
+
+        print(f"Deleting folder with ID: {folder_id}")
+        folder_id_int = int(folder_id)
+        folder_id_str = str(folder_id_int)
+
+        # folder_idを含む全質問を取得
+        questions = supabase.table("questions") \
+            .select("question_id", "folder_id") \
+            .contains("folder_id", [folder_id_str]) \
+            .execute().data
+
+        # 各質問のfolder_idから該当のIDを除いて更新
+        for q in questions:
+            original_list = q.get("folder_id", [])
+            updated_list = [fid for fid in original_list if fid != folder_id_int]
+            supabase.table("questions").update({
+                "folder_id": updated_list
+            }).eq("question_id", q["question_id"]).execute()
+
+        print(f"Removed folder ID {folder_id} from questions.")
+
+        # フォルダーを削除（CASCADEにより他の依存も削除される）
+        supabase.table("question_folders").delete().eq("folder_id", folder_id_int).execute()
+        print(f"Deleted folder ID {folder_id} from question_folders.")
+
+        return redirect("to_set_folder")
+    else:
+        raise Http404("無効なリクエストです。")
+

@@ -26,6 +26,7 @@ urlpatterns = [
     path("ocr/", views.ocr_image, name="ocr_image"),
     path('to_set_quiz/', views.to_set_quiz, name='to_set_quiz'),
     path('to_set_folder/', views.to_set_folder, name='to_set_folder'),
+    path('delete_folder/', views.delete_folder, name='delete_folder'),
     path('create_room/', views.create_room, name='create_room'),
     path('join_room/', views.join_room, name='join_room'),
     path('inside_room/', views.inside_room, name='inside_room'),
