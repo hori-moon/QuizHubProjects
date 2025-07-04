@@ -42,3 +42,15 @@ function showToast(message = "Copied!") {
     toast.classList.remove("show");
   }, 2000);
 }
+
+function openAddFolderModal() {
+  document.getElementById("add-folder-modal").style.display = "block";
+}
+
+function closeAddFolderModal() {
+  document.getElementById("add-folder-modal").style.display = "none";
+}
+
+function showDeleteOptions(folderId) {
+}
+

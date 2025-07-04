@@ -30,6 +30,6 @@
 /* ユーザー名の表示 */
 .hello-name {
     margin-left: auto; /* ユーザー名を右端に配置 */
-    margin-right: 30    px;
+    margin-right: 30px;
     font-size: 16px;
 }

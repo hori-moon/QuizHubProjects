@@ -33,7 +33,7 @@
 
             <label for="room_name">ルーム名:</label>
             <input type="text" id="room_name" name="room_name" value="{{ room_name|default:'' }}"
-                placeholder="{{ random_room_name }}" class="room-input">
+                placeholder="{{ random_room_name }}" class="room-input" maxlength="30" required>
             <br>
 
             <input type="checkbox" id="use_password" name="use_password">
