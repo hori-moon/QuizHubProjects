@@ -39,8 +39,28 @@ def view_questions(request):
 
     questions = []
     answers_map = {}
-    result_message = request.session.pop('result_message', None)
-    answered_question_id = request.session.pop('answered_question_id', None)
+
+    result_message = None
+    answered_question_id = None
+
+    question_id_raw = request.GET.get('question_id')
+    try:
+        current_qid = int(question_id_raw)
+    except (TypeError, ValueError):
+        current_qid = None
+
+    try:
+        last_answered_id = int(request.session.get('answered_question_id'))
+    except (TypeError, ValueError):
+        last_answered_id = None
+
+    if current_qid != last_answered_id:
+        request.session.pop('result_message', None)
+        request.session.pop('answered_question_id', None)
+    else:
+        result_message = request.session.get('result_message', None)
+        answered_question_id = last_answered_id
+
     prev_question_id = None
     next_question_id = None
 
@@ -112,6 +132,12 @@ def view_questions(request):
         .eq('answer_id', question['answer_id']) \
         .execute()
     answers = answer_resp.data if answer_resp.data else []
+
+    for a in answers:
+        correct_list = a.get('correct')
+        if correct_list and len(correct_list) == 1 and ',' in correct_list[0]:
+            a['correct'] = [c.strip() for c in correct_list[0].split(',')]
+
     answers_map = {a['answer_id']: a for a in answers}
 
     # POST時（解答送信時）の処理
@@ -159,8 +185,6 @@ def view_questions(request):
         'prev_question_id': prev_question_id,
         'next_question_id': next_question_id,
     })
-
-
 
 @csrf_exempt
 @login_required

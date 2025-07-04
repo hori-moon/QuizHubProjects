@@ -3,7 +3,7 @@
 {% block title %}正誤一覧{% endblock %}
 
 {% block extra_css %}
-<!-- <link rel="stylesheet" href="{% static 'css/quiz_result.css' %}"> -->
+<link rel="stylesheet" href="{% static 'css/quiz_result.css' %}">
 {% endblock %}
 
 {% block extra_js %}
@@ -21,7 +21,9 @@
         </tr>
         {% for record in records %}
         <tr>
-            <td>{{ record.question_content }}</td>
+            <td>
+                {{ record.question_content|slice:":20" }}{% if record.question_content|length > 20 %}...{% endif %}
+            </td>
             <td>{{ record.answered_contents|join:", " }}</td>
             <td>
                 {% if record.is_correct %}
