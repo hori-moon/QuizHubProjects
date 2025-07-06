@@ -17,7 +17,8 @@
         <div class="folder-section">
             <h2>新しいフォルダーを作成</h2>
             {% csrf_token %}
-            <input type="text" id="new-folder-name" name="new-folder-name" placeholder="新しいフォルダー名">
+            <input type="text" id="new-folder-name" name="new-folder-name" placeholder="新しいフォルダー名"
+                maxlength="30">
             <button type="submit" name="create-folder" value="1">作成</button>
             <h2>既存のフォルダーに追加</h2>
             {% if folders %}

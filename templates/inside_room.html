@@ -17,25 +17,71 @@
 
     <!-- 左カラム（メイン） -->
     <div class="main-content">
-        <table>
+        <table class="folder-table">
             <tr>
                 <th>フォルダー一覧</th>
-            </tr>
-            <tr>
-                <td>
-                    {% if folders %}
-                    <div class="folder-style-list">
-                        {% for folder in folders %}
-                        <a href="{% url 'view_folder' folder.folder_id %}" class="folder-item">
-                            <div class="folder-name">{{ folder.folder_name }}</div>
-                        </a>
-                        {% endfor %}
+                <th>
+                    <button class="add-folders-list-btn" onclick="openAddFolderModal()">+</button>
+                    <!-- モーダル表示エリア -->
+                    <div id="add-folder-modal" class="modal" style="display: none;">
+                        <table class="modal-content">
+                            <tr class="modal-header-row">
+                                <th class="modal-header">
+                                    追加フォルダー
+                                </th>
+                                <th class="modal-header-close">
+                                    <button class="close-modal-btn" onclick="closeAddFolderModal()">×</button>
+                                </th>
+                            </tr>
+                            {% if addable_folders %}
+                            {% for folders in addable_folders %}
+                            <tr>
+                                <td class="folder-name-cell">
+                                    ・{{ folders.folder_name }}
+                                </td>
+                                <td>
+                                    <form method="post" action="{% url 'connect_folder_to_room' %}"
+                                        style="display:inline;">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="folder_id" value="{{ folders.folder_id }}">
+                                        <button type="submit" class="add-folder-btn">追加</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                            {% else %}
+                            <tr>
+                                <td>
+                                    <h6>追加可能なフォルダーはありません。</h6>
+                                </td>
+                            </tr>
+                            {% endif %}
+                        </table>
                     </div>
-                    {% else %}
-                    <p>フォルダーがありません。</p>
-                    {% endif %}
+                </th>
+            </tr>
+            {% if folders %}
+            {% for folder in folders %}
+            <tr>
+                <td class="folder-cell">
+                    <a href="{% url 'view_folder' folder.folder_id %}" class="folder-item">
+                        <div class="folder-name">{{ folder.folder_name }}</div>
+                    </a>
+                </td>
+                <td class="action-cell">
+                    <form method="post" action="{% url 'disconnect_folder_from_room' %}" style="display:inline;">
+                        {% csrf_token %}
+                        <input type="hidden" name="folder_id" value="{{ folder.folder_id }}">
+                        <button type="submit" class="delete-folder-btn">削除</button>
+                    </form>
                 </td>
             </tr>
+            {% endfor %}
+            {% else %}
+            <tr>
+                <td colspan="2" class="no-folders">フォルダーがありません。フォルダーを作成してください。</td>
+            </tr>
+            {% endif %}
         </table>
     </div>
 
