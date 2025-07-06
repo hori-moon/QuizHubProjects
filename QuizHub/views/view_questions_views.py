@@ -7,6 +7,7 @@ from ..services.supabase_client import supabase
 from datetime import datetime
 import random
 import pytz
+from django.core.paginator import Paginator
 
 def list_to_pg_array(lst):
     return "{" + ",".join(str(x) for x in lst) + "}"
@@ -193,24 +194,69 @@ def quiz_result(request):
     if not supabase_user_id:
         return redirect('login')
 
-    request.session.pop('quiz_questions', None)
-    request.session.pop('quiz_folder_id', None)
+    selected_folder_id = request.GET.get("folder_id")
 
-    response = supabase.table("answers_history") \
-        .select("question_id, answered_contents, is_correct") \
+    # 全履歴を取得（folder_list 用にも使用）
+    full_response = supabase.table("answers_history") \
+        .select("question_id, answered_contents, is_correct, answered_at, folder_id") \
         .eq("user_id", str(supabase_user_id)) \
         .order("answered_at", desc=True) \
-        .limit(10).execute()
+        .execute()
+    full_records = full_response.data
 
-    records = response.data
+    # フィルタ処理：選択されたフォルダで絞り込む
+    if selected_folder_id:
+        filtered_records = [r for r in full_records if str(r["folder_id"]) == selected_folder_id]
+    else:
+        filtered_records = full_records
 
-    question_ids = [r["question_id"] for r in records]
-    questions = supabase.table("questions") \
-        .select("question_id, content") \
-        .in_("question_id", question_ids).execute().data
-    question_map = {q["question_id"]: q["content"] for q in questions}
+    # ページネーション
+    paginator = Paginator(filtered_records, 10)
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+    paginated_records = page_obj.object_list
 
-    for r in records:
+    # 問題文取得
+    question_ids = [r["question_id"] for r in paginated_records]
+    question_map = {}
+    if question_ids:
+        questions_response = supabase.table("questions") \
+            .select("question_id, content") \
+            .in_("question_id", question_ids).execute()
+        question_map = {q["question_id"]: q["content"] for q in questions_response.data}
+
+    # 全体の folder_id から map を作成
+    all_folder_ids = list({r["folder_id"] for r in full_records})
+    folder_map = {}
+    if all_folder_ids:
+        folders_response = supabase.table("question_folders") \
+            .select("folder_id, folder_name") \
+            .in_("folder_id", all_folder_ids).execute()
+        folder_map = {f["folder_id"]: f["folder_name"] for f in folders_response.data}
+
+    # 各レコードに追加
+    for r in paginated_records:
         r["question_content"] = question_map.get(r["question_id"], "（不明）")
+        r["folder_name"] = folder_map.get(r["folder_id"], "（不明）")
+    
+        # 🆕 answered_at を datetime 型に変換
+        if isinstance(r["answered_at"], str):
+            try:
+                # ISO 8601形式を datetime に変換
+                r["answered_at"] = datetime.fromisoformat(r["answered_at"])
+            except Exception:
+                r["answered_at"] = None
 
-    return render(request, "quiz_result.html", {"records": records})
+    # フォルダセレクトボックス用リスト（絞り込み前の全体から）
+    folder_list = [
+        {"folder_id": fid, "folder_name": folder_map.get(fid, "（不明）")}
+        for fid in all_folder_ids
+    ]
+
+    return render(request, "quiz_result.html", {
+        "records": paginated_records,
+        "page_obj": page_obj,
+        "folder_list": folder_list,
+        "selected_folder_id": selected_folder_id,
+    })
+    

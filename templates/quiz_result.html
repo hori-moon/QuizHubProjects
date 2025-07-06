@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}正誤一覧{% endblock %}
+{% block title %}解答履歴{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/quiz_result.css' %}">
@@ -13,28 +13,54 @@
 {% block content %}
 <div class="center-box">
     <h2>解答結果</h2>
-    <table>
-        <tr>
-            <th>問題</th>
-            <th>あなたの解答</th>
-            <th>正誤</th>
-        </tr>
-        {% for record in records %}
-        <tr>
-            <td>
-                {{ record.question_content|slice:":20" }}{% if record.question_content|length > 20 %}...{% endif %}
-            </td>
-            <td>{{ record.answered_contents|join:", " }}</td>
-            <td>
-                {% if record.is_correct %}
-                <span style="color:green;">○ 正解</span>
-                {% else %}
-                <span style="color:red;">× 不正解</span>
-                {% endif %}
-            </td>
-        </tr>
+
+    <form method="get" action="{% url 'quiz_result' %}">
+    <label for="folder-select">フォルダで絞り込み</label>
+    <select name="folder_id" id="folder-select" onchange="this.form.submit()">
+        <option value="">全て表示</option>
+        {% for folder in folder_list %}
+        <option value="{{ folder.folder_id }}" {% if folder.folder_id|stringformat:"s" == selected_folder_id %}selected{% endif %}>
+            {{ folder.folder_name }}
+        </option>
         {% endfor %}
+    </select>
+    </form>
+
+    <table>
+    <tr>
+        <th>フォルダ</th>
+        <th>問題</th>
+        <th>あなたの解答</th>
+        <th>正誤</th>
+        <th>解答日時</th>  <!-- 🆕 解答日時の列を追加 -->
+    </tr>
+    {% for record in records %}
+    <tr>
+        <td>{{ record.folder_name }}</td>
+        <td>
+            {{ record.question_content|slice:":20" }}{% if record.question_content|length > 20 %}...{% endif %}
+        </td>
+        <td>{{ record.answered_contents|join:", " }}</td>
+        <td>
+            {% if record.is_correct %}
+            <span style="color:green;">〇</span>
+            {% else %}
+            <span style="color:red;">✕</span>
+            {% endif %}
+        </td>
+        <td>
+            {% if record.answered_at %}
+                {{ record.answered_at|date:"Y-m-d H:i" }}
+            {% else %}
+                -
+            {% endif %}
+        </td>
+    </tr>
+    {% endfor %}
     </table>
+
+    {% include 'pagination.html' %}
+
     <a href="{% url 'inside_room' %}" class="nav-button">ルームへ戻る</a>
 </div>
 {% endblock %}
