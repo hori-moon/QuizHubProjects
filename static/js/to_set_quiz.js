@@ -58,6 +58,10 @@ document.addEventListener("DOMContentLoaded", function () {
             input.pattern = "[0-9,]+";
             input.required = true;
             input.addEventListener("input", validateForm);
+            input.addEventListener("input", function (e) {
+                // 入力値のうち、数字とカンマ以外を除外
+                this.value = this.value.replace(/[^0-9,]/g, "");
+            });
             container.appendChild(input);
         } else {
             // 記述式など（選択肢なし）の場合

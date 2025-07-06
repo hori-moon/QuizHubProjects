@@ -26,11 +26,17 @@
 .folder-section,
 .question-section {
     flex: 1;
-    max-width: 500px;
+    max-width: 50%;
     padding: 20px;
     border: 1px solid #ddd;
     border-radius: 10px;
     background-color: #f9f9f9;
+}
+.folder-section {
+    margin-right: 20px;
+}
+.question-section {
+    margin-left: 20px;
 }
 
 .folder-table {

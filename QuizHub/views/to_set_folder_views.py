@@ -93,7 +93,9 @@ def to_set_folder(request):
     })
 
 def delete_folder(request):
+    print("Deleting folder...")
     if request.method == "POST":
+        print("POST request received for folder deletion.")
         folder_id = request.POST.get("folder_id")
         if not folder_id:
             raise Http404("フォルダーIDが提供されていません。")
@@ -123,6 +125,4 @@ def delete_folder(request):
         print(f"Deleted folder ID {folder_id} from question_folders.")
 
         return redirect("to_set_folder")
-    else:
-        raise Http404("無効なリクエストです。")
 

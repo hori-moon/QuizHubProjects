@@ -12,7 +12,7 @@
 {% endblock %}
 
 {% block content %}
-<form method="post">
+<form method="post"  id="add-to-folder-form">
     <div class="main-container">
         <div class="folder-section">
             <table class="folder-table">
@@ -54,11 +54,14 @@
                     </td>
                 </tr>
                 {% endfor %}
+                {% else %}
+                <tr>
+                    <td colspan="2">
+                        <p>あなたが作成したフォルダーが見つかりませんでした。</p>
+                    </td>
+                </tr>
+                {% endif %}
             </table>
-            {% else %}
-            <p>あなたが作成したフォルダーが見つかりませんでした。</p>
-            {% endif %}
-
         </div>
         <div class="question-section">
             <h2>問題一覧（降順）</h2>
