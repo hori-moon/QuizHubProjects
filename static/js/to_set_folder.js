@@ -11,17 +11,20 @@ document.addEventListener("DOMContentLoaded", function () {
         if (loadingOverlay) loadingOverlay.style.display = "none";
     }
 
-    const folderRadioInputs = document.getElementsByName("selected_folder");
+    const folderRadioInputs = document.getElementsByName("selected-folder");
     const form = document.getElementById("add-to-folder-form");
 
     // 問題を送信する際、フォルダーが選ばれているかチェック
     form.addEventListener("submit", (e) => {
-        const selected = Array.from(folderRadioInputs).some(
-            (input) => input.checked
-        );
+    const clickedButton = document.activeElement;
+
+    if (clickedButton && clickedButton.name === "insert-question") {
+        const selected = Array.from(folderRadioInputs).some((input) => input.checked);
         if (!selected) {
             e.preventDefault();
             alert("フォルダーを選択してください。");
         }
-    });
+    }
+});
+
 });
