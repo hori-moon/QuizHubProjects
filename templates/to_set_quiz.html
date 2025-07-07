@@ -13,7 +13,12 @@
 
 {% block content %}
 <div class="main-left">
-    <p>{{ ocr_result|linebreaksbr|default:"結果が送信されていません。" }}</p>
+    <div class="result-box">
+        <div class="textarea-wrapper">
+            <textarea id="get-ocr">{{ ocr_result|force_escape|default:"結果が送信されていません。" }}</textarea>
+            <div class="overlay-placeholder" id="placeholder-text"></div>
+        </div>
+    </div>
 </div>
 <div class="main-right">
     <form method="POST" action="{% url 'to_set_quiz' %}" enctype="multipart/form-data" id="quiz-form">
