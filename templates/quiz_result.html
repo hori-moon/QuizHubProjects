@@ -12,51 +12,52 @@
 
 {% block content %}
 <div class="center-box">
-    <h2>解答結果</h2>
+    <h2>解答履歴</h2>
 
     <form method="get" action="{% url 'quiz_result' %}">
-    <label for="folder-select">フォルダで絞り込み</label>
-    <select name="folder_id" id="folder-select" onchange="this.form.submit()">
-        <option value="">全て表示</option>
-        {% for folder in folder_list %}
-        <option value="{{ folder.folder_id }}" {% if folder.folder_id|stringformat:"s" == selected_folder_id %}selected{% endif %}>
-            {{ folder.folder_name }}
-        </option>
-        {% endfor %}
-    </select>
+        <label for="folder-select">フォルダで絞り込み</label>
+        <select name="folder_id" id="folder-select" onchange="this.form.submit()">
+            <option value="">全て表示</option>
+            {% for folder in folder_list %}
+            <option value="{{ folder.folder_id }}" {% if folder.folder_id|stringformat:"s"==selected_folder_id
+                %}selected{% endif %}>
+                {{ folder.folder_name }}
+            </option>
+            {% endfor %}
+        </select>
     </form>
 
     <table>
-    <tr>
-        <th>フォルダ</th>
-        <th>問題</th>
-        <th>あなたの解答</th>
-        <th>正誤</th>
-        <th>解答日時</th>  <!-- 🆕 解答日時の列を追加 -->
-    </tr>
-    {% for record in records %}
-    <tr>
-        <td>{{ record.folder_name }}</td>
-        <td>
-            {{ record.question_content|slice:":20" }}{% if record.question_content|length > 20 %}...{% endif %}
-        </td>
-        <td>{{ record.answered_contents|join:", " }}</td>
-        <td>
-            {% if record.is_correct %}
-            <span style="color:green;">〇</span>
-            {% else %}
-            <span style="color:red;">✕</span>
-            {% endif %}
-        </td>
-        <td>
-            {% if record.answered_at %}
+        <tr>
+            <th>フォルダ</th>
+            <th>問題</th>
+            <th>あなたの解答</th>
+            <th>正誤</th>
+            <th>解答日時</th>
+        </tr>
+        {% for record in records %}
+        <tr>
+            <td>{{ record.folder_name }}</td>
+            <td>
+                {{ record.question_content|slice:":20" }}{% if record.question_content|length > 20 %}...{% endif %}
+            </td>
+            <td>{{ record.answered_contents|join:", " }}</td>
+            <td>
+                {% if record.is_correct %}
+                <span style="color:green;">〇</span>
+                {% else %}
+                <span style="color:red;">✕</span>
+                {% endif %}
+            </td>
+            <td>
+                {% if record.answered_at %}
                 {{ record.answered_at|date:"Y-m-d H:i" }}
-            {% else %}
+                {% else %}
                 -
-            {% endif %}
-        </td>
-    </tr>
-    {% endfor %}
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
     </table>
 
     {% include 'pagination.html' %}

@@ -8,3 +8,4 @@ from .create_account_views import *
 from .to_set_quiz_views import *
 from .create_room_views import *
 from .to_set_folder_views import *
+from .logout_views import *

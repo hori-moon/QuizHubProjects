@@ -2,12 +2,15 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth.hashers import make_password
 from ..services.supabase_client import supabase
+from django.contrib.auth import login
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 def create_account(request):
     if request.method == 'POST':
         name = request.POST.get('user_name')
         password = request.POST.get('user_password')
-        
 
         print(f"[DEBUG] POST: name={name}, password={'*' * len(password)}")
 
@@ -38,6 +41,21 @@ def create_account(request):
         try:
             response = supabase.table('users').insert(data).execute()
             print(f"[DEBUG] insert response: {response}")
+
+            # Supabase側で user_id を返していると仮定
+            supabase_user_id = response.data[0].get('user_id')  # ← 必要ならここ調整
+
+            # Djangoユーザー作成
+            django_user, created = User.objects.get_or_create(username=name)
+
+            # SupabaseのIDを Djangoユーザーモデルに保存（カスタムフィールドがあれば）
+            if created or not getattr(django_user, 'supabase_user_id', None):
+                django_user.supabase_user_id = supabase_user_id  # ← これがあれば
+                django_user.save()
+
+            # セッションに保存（ログイン）
+            login(request, django_user)
+
         except Exception as e:
             messages.error(request, f"Supabase登録中に例外が発生しました: {e}")
             return render(request, 'create_account.html')
