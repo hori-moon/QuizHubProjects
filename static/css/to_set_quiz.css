@@ -57,3 +57,54 @@
 #submit-quiz-btn:hover {
     background-color: #303f9f;
 }
+
+/* ファイル選択後に表示される結果ボックス */
+.result-box {
+    border: 1px solid black;
+    width: 90%;
+    max-width: 900px;
+    height: auto;
+    min-height: 200px;
+    margin-top: 20px;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.textarea-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+#get-ocr {
+    width: 100%;
+    height: auto;              /* ← 高さ自動調整 */
+    box-sizing: border-box;
+    font-size: 1rem;
+    resize: none;
+    overflow: hidden;          /* スクロールバーを非表示 */
+    line-height: 1.4;
+    padding: 1em;
+    background-color: white;
+    color: black;
+}
+
+.overlay-placeholder {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: gray;
+    text-align: center;
+    pointer-events: none; /* クリック不可 */
+    font-size: 1rem;
+    white-space: pre-wrap;
+}
+
+/* テキストが入力されたらプレースホルダを消す */
+#ocr-result:not(:empty):not(:placeholder-shown) + .overlay-placeholder,
+#ocr-result:focus + .overlay-placeholder {
+    display: none;
+}

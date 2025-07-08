@@ -30,6 +30,7 @@ def join_room(request):
         request.session['room_name'] = room_name
         request.session['room_password'] = room_password
         request.session['is_editable'] = room['is_editable']
+        request.session['room_master_id'] = room['user_id']
 
         return redirect('inside_room')
 
@@ -49,6 +50,7 @@ def inside_room(request):
     room_id = request.session.get('room_id')
     room_name = request.session.get('room_name')
     room_password = request.session.get('room_password')
+    room_master_id = request.session.get('room_master_id')
     user_id = getattr(request.user, 'supabase_user_id')
 
     if not room_id:
@@ -74,6 +76,8 @@ def inside_room(request):
         'room_password': room_password,
         'folders': folders,
         'addable_folders': addable_folders,
+        'room_master_id': str(room_master_id),
+        'joined_user_id': str(user_id),
     })
 
 def get_user_folders(request):

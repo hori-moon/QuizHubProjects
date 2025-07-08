@@ -1,4 +1,9 @@
 document.addEventListener("DOMContentLoaded", function () {
+
+    // OCR結果の表示エリア
+    const placeholderText = document.getElementById("placeholder-text");
+    const textarea = document.getElementById("get-ocr");
+
     // 総問題数の取得
     const totalQuestions = parseInt(document.getElementById("question-count").value, 10);
 
@@ -13,6 +18,18 @@ document.addEventListener("DOMContentLoaded", function () {
     function hideLoading() {
         if (loadingOverlay) loadingOverlay.style.display = "none";
     }
+
+    function autoResizeTextarea(textarea) {
+        textarea.style.height = "auto";
+        textarea.style.height = textarea.scrollHeight + "px";
+    }
+
+    autoResizeTextarea(textarea);
+
+    textarea.addEventListener("input", function () {
+        autoResizeTextarea(textarea);
+        placeholderText.style.display = textarea.value.trim() === "" ? "block" : "none";
+    });
 
     // スライド形式のUI制御
     const slides = document.querySelectorAll(".quiz-slide");
@@ -58,6 +75,10 @@ document.addEventListener("DOMContentLoaded", function () {
             input.pattern = "[0-9,]+";
             input.required = true;
             input.addEventListener("input", validateForm);
+            input.addEventListener("input", function (e) {
+                // 入力値のうち、数字とカンマ以外を除外
+                this.value = this.value.replace(/[^0-9,]/g, "");
+            });
             container.appendChild(input);
         } else {
             // 記述式など（選択肢なし）の場合

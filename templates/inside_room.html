@@ -25,7 +25,7 @@
                     <!-- モーダル表示エリア -->
                     <div id="add-folder-modal" class="modal" style="display: none;">
                         <table class="modal-content">
-                            <tr class="modal-header-row">
+                            <tr></tr>
                                 <th class="modal-header">
                                     追加フォルダー
                                 </th>
@@ -34,16 +34,16 @@
                                 </th>
                             </tr>
                             {% if addable_folders %}
-                            {% for folders in addable_folders %}
+                            {% for folder in addable_folders %}
                             <tr>
                                 <td class="folder-name-cell">
-                                    ・{{ folders.folder_name }}
+                                    ・{{ folder.folder_name }}
                                 </td>
                                 <td>
                                     <form method="post" action="{% url 'connect_folder_to_room' %}"
                                         style="display:inline;">
                                         {% csrf_token %}
-                                        <input type="hidden" name="folder_id" value="{{ folders.folder_id }}">
+                                        <input type="hidden" name="folder_id" value="{{ folder.folder_id }}">
                                         <button type="submit" class="add-folder-btn">追加</button>
                                     </form>
                                 </td>
@@ -69,11 +69,15 @@
                     </a>
                 </td>
                 <td class="action-cell">
+                    {% with folder_user_id=folder.user_id %}
+                    {% if joined_user_id == room_master_id or joined_user_id == folder_user_id %}
                     <form method="post" action="{% url 'disconnect_folder_from_room' %}" style="display:inline;">
                         {% csrf_token %}
                         <input type="hidden" name="folder_id" value="{{ folder.folder_id }}">
                         <button type="submit" class="delete-folder-btn">削除</button>
                     </form>
+                    {% endif %}
+                    {% endwith %}
                 </td>
             </tr>
             {% endfor %}
@@ -89,7 +93,7 @@
     <div id="toast" class="toast">Copied!</div>
     <div class="side-panel">
         <div class="room-info">
-            <p><strong>ルームID：</strong>
+            <p><strong>ルーム名：</strong>
                 <span id="room-id">{{ room_name }}</span>
                 <span class="dli-copy" data-copy-target="room-id"><span></span></span>
             </p>

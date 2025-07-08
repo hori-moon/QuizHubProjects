@@ -29,7 +29,7 @@ def ocr_image(request):
             # テキスト抽出（日本語対応）
             for region in result.get("regions", []):
                 for line in region.get("lines", []):
-                    line_text = " ".join([word["text"] for word in line.get("words", [])])
+                    line_text = "".join([word["text"] for word in line.get("words", [])])
                     extracted_text += line_text + "\n"
 
             return JsonResponse({'text': extracted_text.strip()})
