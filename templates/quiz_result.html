@@ -19,10 +19,11 @@
         <select name="folder_id" id="folder-select" onchange="this.form.submit()">
             <option value="">全て表示</option>
             {% for folder in folder_list %}
-            <option value="{{ folder.folder_id }}" {% if folder.folder_id|stringformat:"s"==selected_folder_id
-                %}selected{% endif %}>
-                {{ folder.folder_name }}
-            </option>
+            {% if folder.folder_id|stringformat:"s" == selected_folder_id %}
+            <option value="{{ folder.folder_id }}" selected>{{ folder.folder_name }}</option>
+            {% else %}
+            <option value="{{ folder.folder_id }}">{{ folder.folder_name }}</option>
+            {% endif %}
             {% endfor %}
         </select>
     </form>
